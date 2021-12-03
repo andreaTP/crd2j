@@ -1,3 +1,5 @@
 .idea
 .tmp
 target
+
+src/main/java/org/keycloak/**/*

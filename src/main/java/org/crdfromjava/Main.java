@@ -1,3 +1,5 @@
+package org.crdfromjava;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.github.javaparser.ast.CompilationUnit;
@@ -27,7 +29,7 @@ public class Main {
 
 //        var source = new FileInputStream(args[0]);
         var source = new File("./keycloak_crd.yaml");
-        var dest = new File("./.tmp");
+        var dest = new File("./src/main/java");
 
         try (final KubernetesClient client = new DefaultKubernetesClient()) {
 
@@ -176,17 +178,14 @@ public class Main {
         cr.addExtendedType(new ClassOrInterfaceType()
                 .setName("io.fabric8.kubernetes.client.CustomResource")
                 .setTypeArguments(new ClassOrInterfaceType().setName(crSpec), new ClassOrInterfaceType().setName(crStatus)));
-        cr.addImplementedType("io.fabric8.kubernetes.client.Namespaced");
+        cr.addImplementedType("io.fabric8.kubernetes.api.model.Namespaced");
     }
 
     private static List<String> generatePojo(CompilationUnit cu, ClassOrInterfaceDeclaration decl, Map<String, JSONSchemaProps> props) {
         var additionalClasses = new ArrayList<String>();
         for (var key: props.keySet()) {
             var value = props.get(key);
-            System.out.println(key + " -> " + value.getType());
-
             var typ = value.getType();
-
             // TODO: refactor me
             // Kubernetes primitive types handling is hammered
             if (typ == null) {
@@ -201,10 +200,20 @@ public class Main {
                 case "object":
                     var objType = getType(key);
                     if (value.getAdditionalProperties() != null) {
-                        if (value.getAdditionalProperties().getSchema().getType() != null) {
-                            objType = getType(value.getAdditionalProperties().getSchema().getType());
-                        } else if (value.getAdditionalProperties().getSchema().getXKubernetesIntOrString() != null && value.getAdditionalProperties().getSchema().getXKubernetesIntOrString()) {
+                        if (value.getAdditionalProperties().getSchema().getXKubernetesIntOrString() != null && value.getAdditionalProperties().getSchema().getXKubernetesIntOrString()) {
                             objType = "io.fabric8.kubernetes.api.model.IntOrString";
+                        } else if (value.getAdditionalProperties().getSchema().getType() != null) {
+
+                            // TODO: fixme! Big hammer since the day is ending ... this should work on the normal recursion scheme
+                            if (value.getAdditionalProperties().getSchema().getType().equals("array")) {
+                                objType = new ClassOrInterfaceType()
+                                        .setName("java.util.List")
+                                        .setTypeArguments(new ClassOrInterfaceType().setName(
+                                                getType(value.getAdditionalProperties().getSchema().getItems().getSchema().getType()))).toString();
+                            } else {
+                                objType = getType(value.getAdditionalProperties().getSchema().getType());
+                            }
+
                         } else {
                             throw new RuntimeException("Object prop not handled " + key);
                         }
@@ -233,8 +242,9 @@ public class Main {
                                 generatePojo(cu, objClass, value.getItems().getSchema().getProperties())
                         );
                     }
+                    // TODO: better to use Arrays?
                     var type = new ClassOrInterfaceType()
-                            .setName("Array")
+                            .setName("java.util.List")
                             .setTypeArguments(new ClassOrInterfaceType().setName(arrType));
                     var arrField = decl.addField(type, key, Modifier.Keyword.PRIVATE);
                     arrField.createGetter();
@@ -261,7 +271,8 @@ public class Main {
             case "string":
                 return "String";
             default:
-                return type.substring(0, 1).toUpperCase() + type.substring(1, type.length());
+                if (type.contains(".")) return type;
+                else return type.substring(0, 1).toUpperCase() + type.substring(1);
         }
     }
 
