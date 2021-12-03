@@ -18,9 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Main {
 
@@ -66,6 +64,8 @@ public class Main {
             var cr = cu.addClass(crName);
             generateCR(cr, version, group, crSpecName, crStatusName);
 
+            var additionalClasses = new ArrayList<String>();
+
             var crSpec = cu.addClass(crSpecName);
             var specProps = specVersion
                     .getSchema()
@@ -74,7 +74,9 @@ public class Main {
                     .get("spec")
                     .getProperties();
 
-            generatePojo(crSpec, specProps);
+            additionalClasses.addAll(
+                generatePojo(cu, crSpec, specProps)
+            );
 
             var crStatus = cu.addClass(crStatusName);
             var statusProps = specVersion
@@ -84,7 +86,9 @@ public class Main {
                     .get("status")
                     .getProperties();
 
-            generatePojo(cu, crStatus, statusProps);
+            additionalClasses.addAll(
+                generatePojo(cu, crStatus, statusProps)
+            );
 
             var destinationFolder = createFolders(pkg, dest);
             System.out.println(destinationFolder.getAbsolutePath());
@@ -93,6 +97,10 @@ public class Main {
             writeJavaClass(cu, destinationFolder, crName);
             writeJavaClass(cu, destinationFolder, crSpecName);
             writeJavaClass(cu, destinationFolder, crStatusName);
+
+            for (var cn: additionalClasses) {
+                writeJavaClass(cu, destinationFolder, cn);
+            }
 
 //            System.out.println(
 //                    cu.toString()
@@ -171,43 +179,77 @@ public class Main {
         cr.addImplementedType("io.fabric8.kubernetes.client.Namespaced");
     }
 
-//    private static void generatePojo(ClassOrInterfaceDeclaration decl, Map<String, JSONSchemaProps> props) {
-//        props.forEach((name, prop) -> {
-//            if (prop.getType().equals("object")) {
-//
-//            } else if (prop.getType().equals("array")) {
-//
-//            } else {
-//                var field = decl.addField(prop.getType(), name, Modifier.Keyword.PRIVATE);
-//                field.createGetter();
-//                field.createSetter();
-//            }
-//        });
-//    }
-
-    private static Map<String, ClassOrInterfaceDeclaration> generatePojo(CompilationUnit cu, ClassOrInterfaceDeclaration decl, Map<String, JSONSchemaProps> props) {
+    private static List<String> generatePojo(CompilationUnit cu, ClassOrInterfaceDeclaration decl, Map<String, JSONSchemaProps> props) {
+        var additionalClasses = new ArrayList<String>();
         for (var key: props.keySet()) {
             var value = props.get(key);
-            switch (value.getType()) {
+            System.out.println(key + " -> " + value.getType());
+
+            var typ = value.getType();
+
+            // TODO: refactor me
+            // Kubernetes primitive types handling is hammered
+            if (typ == null) {
+                if (value.getXKubernetesIntOrString()) {
+                    typ = "io.fabric8.kubernetes.api.model.IntOrString";
+                } else {
+                    throw new RuntimeException("Kubernetes native type not handled " + key);
+                }
+            }
+
+            switch (typ) {
                 case "object":
+                    var objType = getType(key);
+                    if (value.getAdditionalProperties() != null) {
+                        if (value.getAdditionalProperties().getSchema().getType() != null) {
+                            objType = getType(value.getAdditionalProperties().getSchema().getType());
+                        } else if (value.getAdditionalProperties().getSchema().getXKubernetesIntOrString() != null && value.getAdditionalProperties().getSchema().getXKubernetesIntOrString()) {
+                            objType = "io.fabric8.kubernetes.api.model.IntOrString";
+                        } else {
+                            throw new RuntimeException("Object prop not handled " + key);
+                        }
+                    } else if (value.getProperties() != null) {
+                        var objClass = cu.addClass(objType);
+                        additionalClasses.add(objType);
+                        additionalClasses.addAll(
+                                generatePojo(cu, objClass, value.getProperties())
+                        );
+                    } else {
+                        throw new RuntimeException("Object not handled " + key);
+                    }
+
+                    var objField = decl.addField(objType, key, Modifier.Keyword.PRIVATE);
+                    objField.createGetter();
+                    objField.createSetter();
+
                     break;
                 case "array":
+                    var arrType = getType(value.getItems().getSchema().getType());
+                    if (!isPrimitive(value.getItems().getSchema().getType())) {
+                        arrType = getType(key);
+                        var objClass = cu.addClass(arrType);
+                        additionalClasses.add(arrType);
+                        additionalClasses.addAll(
+                                generatePojo(cu, objClass, value.getItems().getSchema().getProperties())
+                        );
+                    }
                     var type = new ClassOrInterfaceType()
                             .setName("Array")
-                            .setTypeArguments(new ClassOrInterfaceType().setName(getType(value.getItems().getSchema().getType())));
+                            .setTypeArguments(new ClassOrInterfaceType().setName(arrType));
                     var arrField = decl.addField(type, key, Modifier.Keyword.PRIVATE);
                     arrField.createGetter();
                     arrField.createSetter();
+
                     break;
                 default:
-                    var field = decl.addField(getType(value.getType()), key, Modifier.Keyword.PRIVATE);
+                    var field = decl.addField(getType(typ), key, Modifier.Keyword.PRIVATE);
                     field.createGetter();
                     field.createSetter();
                     break;
             }
         }
 
-        return Map.of();
+        return additionalClasses;
     }
 
     private static String getType(String type) {
@@ -219,7 +261,18 @@ public class Main {
             case "string":
                 return "String";
             default:
-                return type.substring(0, 1).toUpperCase() + type.substring(1, type.length() -1);
+                return type.substring(0, 1).toUpperCase() + type.substring(1, type.length());
+        }
+    }
+
+    private static boolean isPrimitive(String type) {
+        switch (type) {
+            case "boolean":
+            case "integer":
+            case "string":
+                return true;
+            default:
+                return false;
         }
     }
 
