@@ -10,7 +10,6 @@ import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.printer.DefaultPrettyPrinter;
-import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -29,7 +28,9 @@ public class Main {
 
 //        var source = new FileInputStream(args[0]);
         var source = new File("./keycloak_crd.yaml");
+        // var source = new File("./crontab-crd.yml");
         var dest = new File("./src/main/java");
+        //var dest = new File(".tmp");
 
         try (final KubernetesClient client = new DefaultKubernetesClient()) {
 
@@ -66,8 +67,7 @@ public class Main {
             var cr = cu.addClass(crName);
             generateCR(cr, version, group, crSpecName, crStatusName);
 
-            var additionalClasses = new ArrayList<String>();
-
+            // TODO: check the output if starting one level up from Spec and Status?
             var crSpec = cu.addClass(crSpecName);
             var specProps = specVersion
                     .getSchema()
@@ -76,11 +76,9 @@ public class Main {
                     .get("spec")
                     .getProperties();
 
-            additionalClasses.addAll(
-                generatePojo(cu, crSpec, specProps)
-            );
+            var specClasses = new PojoObject(crSpecName, specProps)
+                    .generateJava(cu);
 
-            var crStatus = cu.addClass(crStatusName);
             var statusProps = specVersion
                     .getSchema()
                     .getOpenAPIV3Schema()
@@ -88,19 +86,19 @@ public class Main {
                     .get("status")
                     .getProperties();
 
-            additionalClasses.addAll(
-                generatePojo(cu, crStatus, statusProps)
-            );
+            var statusClasses = new PojoObject(crStatusName, statusProps)
+                    .generateJava(cu);
 
             var destinationFolder = createFolders(pkg, dest);
             System.out.println(destinationFolder.getAbsolutePath());
 
             cu.printer(new DefaultPrettyPrinter());
             writeJavaClass(cu, destinationFolder, crName);
-            writeJavaClass(cu, destinationFolder, crSpecName);
-            writeJavaClass(cu, destinationFolder, crStatusName);
 
-            for (var cn: additionalClasses) {
+            for (var cn: specClasses) {
+                writeJavaClass(cu, destinationFolder, cn);
+            }
+            for (var cn: statusClasses) {
                 writeJavaClass(cu, destinationFolder, cn);
             }
 
@@ -160,7 +158,6 @@ public class Main {
                     .trim());
     }
 
-
     private static void generateCR(ClassOrInterfaceDeclaration cr, String version, String group, String crSpec, String crStatus) {
         cr.addAnnotation(
                 new SingleMemberAnnotationExpr(
@@ -179,112 +176,6 @@ public class Main {
                 .setName("io.fabric8.kubernetes.client.CustomResource")
                 .setTypeArguments(new ClassOrInterfaceType().setName(crSpec), new ClassOrInterfaceType().setName(crStatus)));
         cr.addImplementedType("io.fabric8.kubernetes.api.model.Namespaced");
-    }
-
-    private static List<String> generatePojo(CompilationUnit cu, ClassOrInterfaceDeclaration decl, Map<String, JSONSchemaProps> props) {
-        var additionalClasses = new ArrayList<String>();
-        for (var key: props.keySet()) {
-            var value = props.get(key);
-            var typ = value.getType();
-            // TODO: refactor me
-            // Kubernetes primitive types handling is hammered
-            if (typ == null) {
-                if (value.getXKubernetesIntOrString()) {
-                    typ = "io.fabric8.kubernetes.api.model.IntOrString";
-                } else {
-                    throw new RuntimeException("Kubernetes native type not handled " + key);
-                }
-            }
-
-            switch (typ) {
-                case "object":
-                    var objType = getType(key);
-                    if (value.getAdditionalProperties() != null) {
-                        if (value.getAdditionalProperties().getSchema().getXKubernetesIntOrString() != null && value.getAdditionalProperties().getSchema().getXKubernetesIntOrString()) {
-                            objType = "io.fabric8.kubernetes.api.model.IntOrString";
-                        } else if (value.getAdditionalProperties().getSchema().getType() != null) {
-
-                            // TODO: fixme! Big hammer since the day is ending ... this should work on the normal recursion scheme
-                            if (value.getAdditionalProperties().getSchema().getType().equals("array")) {
-                                objType = new ClassOrInterfaceType()
-                                        .setName("java.util.List")
-                                        .setTypeArguments(new ClassOrInterfaceType().setName(
-                                                getType(value.getAdditionalProperties().getSchema().getItems().getSchema().getType()))).toString();
-                            } else {
-                                objType = getType(value.getAdditionalProperties().getSchema().getType());
-                            }
-
-                        } else {
-                            throw new RuntimeException("Object prop not handled " + key);
-                        }
-                    } else if (value.getProperties() != null) {
-                        var objClass = cu.addClass(objType);
-                        additionalClasses.add(objType);
-                        additionalClasses.addAll(
-                                generatePojo(cu, objClass, value.getProperties())
-                        );
-                    } else {
-                        throw new RuntimeException("Object not handled " + key);
-                    }
-
-                    var objField = decl.addField(objType, key, Modifier.Keyword.PRIVATE);
-                    objField.createGetter();
-                    objField.createSetter();
-
-                    break;
-                case "array":
-                    var arrType = getType(value.getItems().getSchema().getType());
-                    if (!isPrimitive(value.getItems().getSchema().getType())) {
-                        arrType = getType(key);
-                        var objClass = cu.addClass(arrType);
-                        additionalClasses.add(arrType);
-                        additionalClasses.addAll(
-                                generatePojo(cu, objClass, value.getItems().getSchema().getProperties())
-                        );
-                    }
-                    // TODO: better to use Arrays?
-                    var type = new ClassOrInterfaceType()
-                            .setName("java.util.List")
-                            .setTypeArguments(new ClassOrInterfaceType().setName(arrType));
-                    var arrField = decl.addField(type, key, Modifier.Keyword.PRIVATE);
-                    arrField.createGetter();
-                    arrField.createSetter();
-
-                    break;
-                default:
-                    var field = decl.addField(getType(typ), key, Modifier.Keyword.PRIVATE);
-                    field.createGetter();
-                    field.createSetter();
-                    break;
-            }
-        }
-
-        return additionalClasses;
-    }
-
-    private static String getType(String type) {
-        switch (type) {
-            case "boolean":
-                return "boolean";
-            case "integer":
-                return "int";
-            case "string":
-                return "String";
-            default:
-                if (type.contains(".")) return type;
-                else return type.substring(0, 1).toUpperCase() + type.substring(1);
-        }
-    }
-
-    private static boolean isPrimitive(String type) {
-        switch (type) {
-            case "boolean":
-            case "integer":
-            case "string":
-                return true;
-            default:
-                return false;
-        }
     }
 
 }
