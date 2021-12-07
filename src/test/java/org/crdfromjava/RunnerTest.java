@@ -1,0 +1,67 @@
+package org.crdfromjava;
+
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import org.approvaltests.Approvals;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class RunnerTest {
+
+    KubernetesClient client = new DefaultKubernetesClient();
+    CRGeneratorRunner runner = new CRGeneratorRunner();
+
+    @Test
+    void testCrontabCrd() {
+        // Arrange
+        var crd = client
+                .apiextensions()
+                .v1()
+                .customResourceDefinitions()
+                .load("crontab-crd.yml")
+                .get();
+
+        // Act
+        var writables = runner.generate(crd, Optional.empty());
+
+        // Assert
+        assertThat(writables.size()).isEqualTo(1);
+
+        var writable = writables.get(0);
+
+        Approvals.verifyAll("CrontabJavaCr", List.of(
+            writable.getJavaClass("CronTab"),
+            writable.getJavaClass("Spec"),
+            writable.getJavaClass("Status"))
+        );
+    }
+
+    @Test
+    void testKeycloakCrd() {
+        // Arrange
+        var crd = client
+                .apiextensions()
+                .v1()
+                .customResourceDefinitions()
+                .load("crontab-crd.yml")
+                .get();
+
+        // Act
+        var writables = runner.generate(crd, Optional.empty());
+
+        // Assert
+        assertThat(writables.size()).isEqualTo(1);
+
+        var writable = writables.get(0);
+
+        Approvals.verifyAll("CrontabJavaCr", List.of(
+                writable.getJavaClass("CronTab"),
+                writable.getJavaClass("Spec"),
+                writable.getJavaClass("Status"))
+        );
+    }
+}

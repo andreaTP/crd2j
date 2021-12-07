@@ -28,13 +28,19 @@ public class WritableCRCompilationUnit {
         }
     }
 
-    private void writeJavaClass(File basePath, String name) throws IOException {
+    String getJavaClass(String name) {
         var clazz = cu.getClassByName(name);
         assert(clazz.isPresent());
 
         var content = new StringBuilder();
         cu.getPackageDeclaration().ifPresent((p) -> content.append(p));
         content.append(clazz.get().toString());
+
+        return content.toString();
+    }
+
+    private void writeJavaClass(File basePath, String name) throws IOException {
+        var content = getJavaClass(name);
 
         writeToFile(
                 basePath.toPath().resolve(name + ".java").toFile(),

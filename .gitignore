@@ -2,4 +2,4 @@
 .tmp
 target
 
-src/main/java/org/keycloak/**/*
+*.received.txt

@@ -28,7 +28,7 @@ public class CRGeneratorRunner {
         }
     }
 
-    private List<WritableCRCompilationUnit> generate(CustomResourceDefinition crd, Optional<String> basePackageName) {
+    public List<WritableCRCompilationUnit> generate(CustomResourceDefinition crd, Optional<String> basePackageName) {
         var crSpec = crd.getSpec();
         var crName = crd.getSpec().getNames().getKind();
         var group = crd.getSpec().getGroup();
