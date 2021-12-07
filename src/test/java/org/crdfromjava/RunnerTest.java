@@ -22,7 +22,10 @@ public class RunnerTest {
                 .apiextensions()
                 .v1()
                 .customResourceDefinitions()
-                .load("crontab-crd.yml")
+                .load(this
+                        .getClass()
+                        .getClassLoader()
+                        .getResource("crontab-crd.yml"))
                 .get();
 
         // Act
@@ -47,7 +50,10 @@ public class RunnerTest {
                 .apiextensions()
                 .v1()
                 .customResourceDefinitions()
-                .load("crontab-crd.yml")
+                .load(this
+                        .getClass()
+                        .getClassLoader()
+                        .getResource("keycloak-crd.yml"))
                 .get();
 
         // Act
@@ -58,8 +64,8 @@ public class RunnerTest {
 
         var writable = writables.get(0);
 
-        Approvals.verifyAll("CrontabJavaCr", List.of(
-                writable.getJavaClass("CronTab"),
+        Approvals.verifyAll("KeycloakJavaCr", List.of(
+                writable.getJavaClass("Keycloak"),
                 writable.getJavaClass("Spec"),
                 writable.getJavaClass("Status"))
         );

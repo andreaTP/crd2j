@@ -62,7 +62,6 @@ public class WritableCRCompilationUnit {
         var destFolder = folder.toPath();
         if (pkg.isPresent()) {
             for (var p: pkg.get().split("\\.")) {
-                System.out.println(p);
                 destFolder = destFolder.resolve(p);
             }
         }

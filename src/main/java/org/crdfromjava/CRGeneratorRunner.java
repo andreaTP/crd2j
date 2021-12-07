@@ -47,7 +47,7 @@ public class CRGeneratorRunner {
 
             var crGenerator = new CRObjectGenerator(crName, version, group);
 
-            var topLevelUUID = UUID.randomUUID().toString();
+            var topLevelUUID = "TopLevel" + UUID.randomUUID().toString().replace("-", "");
             var topLevelGenerator =
                     JSONSchemaToPojoGenerator.fromJsonSchema(topLevelUUID, crdv
                             .getSchema()

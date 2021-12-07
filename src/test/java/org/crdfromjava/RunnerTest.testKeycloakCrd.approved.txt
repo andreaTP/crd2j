@@ -1,0 +1,224 @@
+KeycloakJavaCr[0] = package v1alpha1;
+
+@io.fabric8.kubernetes.model.annotation.Version("keycloak.org")
+@io.fabric8.kubernetes.model.annotation.Group("v1alpha1")
+public class Keycloak extends io.fabric8.kubernetes.client.CustomResource<Spec, Status> implements io.fabric8.kubernetes.api.model.Namespaced {
+}
+KeycloakJavaCr[1] = package v1alpha1;
+
+public class Spec {
+
+    private int instances;
+
+    public int getInstances() {
+        return instances;
+    }
+
+    public void setInstances(int instances) {
+        this.instances = instances;
+    }
+
+    private String profile;
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    private ExternalDatabase externalDatabase;
+
+    public ExternalDatabase getExternalDatabase() {
+        return externalDatabase;
+    }
+
+    public void setExternalDatabase(ExternalDatabase externalDatabase) {
+        this.externalDatabase = externalDatabase;
+    }
+
+    private ExternalAccess externalAccess;
+
+    public ExternalAccess getExternalAccess() {
+        return externalAccess;
+    }
+
+    public void setExternalAccess(ExternalAccess externalAccess) {
+        this.externalAccess = externalAccess;
+    }
+
+    private KeycloakDeploymentSpec keycloakDeploymentSpec;
+
+    public KeycloakDeploymentSpec getKeycloakDeploymentSpec() {
+        return keycloakDeploymentSpec;
+    }
+
+    public void setKeycloakDeploymentSpec(KeycloakDeploymentSpec keycloakDeploymentSpec) {
+        this.keycloakDeploymentSpec = keycloakDeploymentSpec;
+    }
+
+    private java.util.List<String> extensions;
+
+    public java.util.List<String> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(java.util.List<String> extensions) {
+        this.extensions = extensions;
+    }
+
+    private External external;
+
+    public External getExternal() {
+        return external;
+    }
+
+    public void setExternal(External external) {
+        this.external = external;
+    }
+
+    private String storageClassName;
+
+    public String getStorageClassName() {
+        return storageClassName;
+    }
+
+    public void setStorageClassName(String storageClassName) {
+        this.storageClassName = storageClassName;
+    }
+
+    private MultiAvailablityZones multiAvailablityZones;
+
+    public MultiAvailablityZones getMultiAvailablityZones() {
+        return multiAvailablityZones;
+    }
+
+    public void setMultiAvailablityZones(MultiAvailablityZones multiAvailablityZones) {
+        this.multiAvailablityZones = multiAvailablityZones;
+    }
+
+    private boolean unmanaged;
+
+    public boolean getUnmanaged() {
+        return unmanaged;
+    }
+
+    public void setUnmanaged(boolean unmanaged) {
+        this.unmanaged = unmanaged;
+    }
+
+    private Migration migration;
+
+    public Migration getMigration() {
+        return migration;
+    }
+
+    public void setMigration(Migration migration) {
+        this.migration = migration;
+    }
+
+    private PodDisruptionBudget podDisruptionBudget;
+
+    public PodDisruptionBudget getPodDisruptionBudget() {
+        return podDisruptionBudget;
+    }
+
+    public void setPodDisruptionBudget(PodDisruptionBudget podDisruptionBudget) {
+        this.podDisruptionBudget = podDisruptionBudget;
+    }
+
+    private PostgresDeploymentSpec postgresDeploymentSpec;
+
+    public PostgresDeploymentSpec getPostgresDeploymentSpec() {
+        return postgresDeploymentSpec;
+    }
+
+    public void setPostgresDeploymentSpec(PostgresDeploymentSpec postgresDeploymentSpec) {
+        this.postgresDeploymentSpec = postgresDeploymentSpec;
+    }
+}
+KeycloakJavaCr[2] = package v1alpha1;
+
+public class Status {
+
+    private String phase;
+
+    public String getPhase() {
+        return phase;
+    }
+
+    public void setPhase(String phase) {
+        this.phase = phase;
+    }
+
+    private String externalURL;
+
+    public String getExternalURL() {
+        return externalURL;
+    }
+
+    public void setExternalURL(String externalURL) {
+        this.externalURL = externalURL;
+    }
+
+    private java.util.List<String> secondaryResources;
+
+    public java.util.List<String> getSecondaryResources() {
+        return secondaryResources;
+    }
+
+    public void setSecondaryResources(java.util.List<String> secondaryResources) {
+        this.secondaryResources = secondaryResources;
+    }
+
+    private String credentialSecret;
+
+    public String getCredentialSecret() {
+        return credentialSecret;
+    }
+
+    public void setCredentialSecret(String credentialSecret) {
+        this.credentialSecret = credentialSecret;
+    }
+
+    private boolean ready;
+
+    public boolean getReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
+    private String internalURL;
+
+    public String getInternalURL() {
+        return internalURL;
+    }
+
+    public void setInternalURL(String internalURL) {
+        this.internalURL = internalURL;
+    }
+
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+}

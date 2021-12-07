@@ -14,6 +14,6 @@ mvn clean compile
 ```
 
 
-TODO: handle x-kubernetes-preserve-fields
-TODO: better namings
-TODO: refactor the read and write part from to disk
+TODO: handle x-kubernetes-preserve-fields -> Importante!!!
+TODO: better namings / find a better name for the library and the repo
+TODO: add a CI
