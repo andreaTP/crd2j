@@ -1,11 +1,10 @@
 
 This is a POC for generating Java fabric8 CR java code from CRD definitions.
 
-At the moment it has been hammered on the current Keycloak CRD. 
-
-Execute with:
+Generate the example code with something like:
 ```bash
-mvn clean compile exec:java
+mvn clean compile exec:java -Dexec.args="$PWD/src/test/resources/crontab-crd.yml $PWD/.tmp"
+mvn clean compile exec:java -Dexec.args="$PWD/src/test/resources/keycloak-crd.yml $PWD/.tmp"
 ```
 
 And check that the generated code compiles with:
