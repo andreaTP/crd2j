@@ -13,6 +13,6 @@ mvn clean compile
 ```
 
 
-TODO: handle x-kubernetes-preserve-fields -> Importante!!!
+TODO: handle x-kubernetes-preserve-fields -> Important!!!
 TODO: better namings / find a better name for the library and the repo
 TODO: add a CI
