@@ -13,16 +13,6 @@ public class CRGeneratorRunner {
 
     public void run(File source, File basePath) {
         try (final KubernetesClient client = new DefaultKubernetesClient()) {
-            // Read CRD as a plain text file
-            var content = "";
-            try {
-                content = new String(Files.readAllBytes(source.toPath()));
-            } catch (Exception cause) {
-                throw new RuntimeException(cause);
-            }
-
-            var pkg = getPackage(content);
-
             // Parse CRD with fabric8
             var crd = client
                     .apiextensions()
@@ -31,7 +21,7 @@ public class CRGeneratorRunner {
                     .load(source)
                     .get();
 
-            var writables = generate(crd, pkg);
+            var writables = generate(crd, getPackage(crd.getSpec().getGroup()));
 
             for (var w : writables) {
                 w.writeAllJavaClasses(basePath);
@@ -76,16 +66,23 @@ public class CRGeneratorRunner {
         return writableCUs;
     }
 
-    private Optional<String> getPackage(String content) {
-        var optJavaPkg = Arrays.stream(content.split("\n"))
-                .filter((s) -> s.startsWith("#"))
-                .filter((s) -> s.contains("java-package:"))
-                .findFirst();
+    private Optional<String> getPackage(String group) {
+        if (group == null) {
+            return Optional.empty();
+        }
 
-        return optJavaPkg.map((s) -> s
-                .replace("#", "")
-                .replace("java-package:", "")
-                .trim());
+        var stack = new Stack<String>();
+        for (var s : group.split("\\.")) {
+            stack.push(s);
+        }
+        var packageName = new StringBuilder();
+        packageName.append(stack.pop());
+        for (var s: stack) {
+            packageName.append(".");
+            packageName.append(s);
+        }
+
+        return Optional.of(packageName.toString());
     }
 
 }

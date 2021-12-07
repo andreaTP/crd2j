@@ -21,7 +21,8 @@ public class WritableCRCompilationUnit {
 
     public void writeAllJavaClasses(File basePath) {
         try {
-            for (var cn : this.classNames) writeJavaClass(basePath, cn);
+            var finalPath = createFolders(cu.getPackageDeclaration().map((p) -> p.getName().asString()), basePath);
+            for (var cn : this.classNames) writeJavaClass(finalPath, cn);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
