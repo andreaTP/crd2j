@@ -1,14 +1,13 @@
 package org.crdfromjava;
 
 import com.github.javaparser.ast.CompilationUnit;
-import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 
 import java.util.List;
 
-public class Primitive implements SchemaToPojo {
+public class PrimitiveGenerator implements JSONSchemaToPojoGenerator {
     private String type;
 
-    Primitive(String type) {
+    PrimitiveGenerator(String type) {
         this.type = type;
     }
 

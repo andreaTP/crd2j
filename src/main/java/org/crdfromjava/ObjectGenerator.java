@@ -9,18 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PojoObject implements SchemaToPojo {
+public class ObjectGenerator implements JSONSchemaToPojoGenerator {
 
     private String type = null;
-    private Map<String, SchemaToPojo> fields = new HashMap<String, SchemaToPojo>();
+    private Map<String, JSONSchemaToPojoGenerator> fields = new HashMap<>();
 
-    public PojoObject(String type, Map<String, JSONSchemaProps> fields) {
+    public ObjectGenerator(String type, Map<String, JSONSchemaProps> fields) {
         this.type = type.substring(0, 1).toUpperCase() + type.substring(1);
 
-        for (var field : fields.entrySet()) {
-            this.fields.put(
-                    field.getKey(),
-                    SchemaToPojo.fromJsonSchema(field.getKey(), field.getValue()));
+        if (fields == null) {
+            // no fields ???
+        } else {
+            for (var field : fields.entrySet()) {
+                this.fields.put(
+                        field.getKey(),
+                        JSONSchemaToPojoGenerator.fromJsonSchema(field.getKey(), field.getValue()));
+            }
         }
     }
 
@@ -33,7 +37,7 @@ public class PojoObject implements SchemaToPojo {
     public List<String> generateJava(CompilationUnit cu) {
         var clz = cu.getClassByName(this.type).orElse(cu.addClass(this.type));
 
-        var buffer = new ArrayList<String>();
+        var buffer = new ArrayList<String>(this.fields.size() + 1);
         for (var k : this.fields.keySet()) {
             var prop = this.fields.get(k);
             buffer.addAll(prop.generateJava(cu));

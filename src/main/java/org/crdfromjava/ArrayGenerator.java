@@ -6,12 +6,12 @@ import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 
 import java.util.List;
 
-public class PojoArray implements SchemaToPojo {
+public class ArrayGenerator implements JSONSchemaToPojoGenerator {
 
     private String type = null;
-    private SchemaToPojo nested = null;
+    private JSONSchemaToPojoGenerator nested = null;
 
-    PojoArray(JSONSchemaProps props, SchemaToPojo nested) {
+    ArrayGenerator(JSONSchemaProps props, JSONSchemaToPojoGenerator nested) {
         this.type = new ClassOrInterfaceType()
                 .setName("java.util.List")
                 .setTypeArguments(new ClassOrInterfaceType().setName(nested.getType()))

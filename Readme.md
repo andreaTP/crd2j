@@ -12,3 +12,8 @@ And check that the generated code compiles with:
 ```bash
 mvn clean compile
 ```
+
+
+TODO: handle x-kubernetes-preserve-fields
+TODO: better namings
+TODO: refactor the read and write part from to disk
