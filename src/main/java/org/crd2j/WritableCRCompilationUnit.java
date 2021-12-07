@@ -1,4 +1,4 @@
-package org.crdfromjava;
+package org.crd2j;
 
 import com.github.javaparser.ast.CompilationUnit;
 

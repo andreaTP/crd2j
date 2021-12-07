@@ -1,4 +1,4 @@
-package org.crdfromjava;
+package org.crd2j.ast;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ObjectGenerator implements JSONSchemaToPojoGenerator {
+public class JObject implements JSONSchema2Pojo {
 
     private String type = null;
-    private Map<String, JSONSchemaToPojoGenerator> fields = new HashMap<>();
+    private Map<String, JSONSchema2Pojo> fields = new HashMap<>();
 
-    public ObjectGenerator(String type, Map<String, JSONSchemaProps> fields) {
+    public JObject(String type, Map<String, JSONSchemaProps> fields) {
         this.type = type.substring(0, 1).toUpperCase() + type.substring(1);
 
         if (fields == null) {
@@ -23,7 +23,7 @@ public class ObjectGenerator implements JSONSchemaToPojoGenerator {
             for (var field : fields.entrySet()) {
                 this.fields.put(
                         field.getKey(),
-                        JSONSchemaToPojoGenerator.fromJsonSchema(field.getKey(), field.getValue()));
+                        JSONSchema2Pojo.fromJsonSchema(field.getKey(), field.getValue()));
             }
         }
     }

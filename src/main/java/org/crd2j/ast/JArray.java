@@ -1,21 +1,16 @@
-package org.crdfromjava;
+package org.crd2j.ast;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 
 import java.util.List;
 
-public class ArrayGenerator implements JSONSchemaToPojoGenerator {
+public class JArray implements JSONSchema2Pojo {
 
     private String type = null;
-    private JSONSchemaToPojoGenerator nested = null;
+    private JSONSchema2Pojo nested = null;
 
-    ArrayGenerator(JSONSchemaProps props, JSONSchemaToPojoGenerator nested) {
-        this(nested);
-    }
-
-    ArrayGenerator(JSONSchemaToPojoGenerator nested) {
+    public JArray(JSONSchema2Pojo nested) {
         this.type = new ClassOrInterfaceType()
                 .setName("java.util.List")
                 .setTypeArguments(new ClassOrInterfaceType().setName(nested.getType()))

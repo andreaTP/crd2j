@@ -1,4 +1,4 @@
-package org.crdfromjava;
+package org.crd2j.ast;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.Name;
@@ -8,13 +8,13 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 
 import java.util.List;
 
-public class CRObjectGenerator implements JSONSchemaToPojoGenerator {
+public class JCRObject implements JSONSchema2Pojo {
 
     private String type;
     private String group;
     private String version;
 
-    CRObjectGenerator(String type, String group, String version) {
+    public JCRObject(String type, String group, String version) {
         this.type = type;
         this.group = group;
         this.version = version;

@@ -77,7 +77,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>org.crdfromjava.Main</mainClass>
+                    <mainClass>org.crd2j.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>

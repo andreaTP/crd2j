@@ -1,13 +1,13 @@
-package org.crdfromjava;
+package org.crd2j.ast;
 
 import com.github.javaparser.ast.CompilationUnit;
 
 import java.util.List;
 
-public class PrimitiveGenerator implements JSONSchemaToPojoGenerator {
+public class JPrimitive implements JSONSchema2Pojo {
     private String type;
 
-    PrimitiveGenerator(String type) {
+    public JPrimitive(String type) {
         this.type = type;
     }
 

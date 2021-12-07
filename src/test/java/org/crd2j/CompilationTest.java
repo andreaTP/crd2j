@@ -1,20 +1,15 @@
-package org.crdfromjava;
+package org.crd2j;
 
-import com.google.common.collect.ImmutableList;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
-import org.junit.Rule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
 
-import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;

@@ -1,7 +1,11 @@
-package org.crdfromjava;
+package org.crd2j;
 
 import com.github.javaparser.ast.CompilationUnit;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
+import org.crd2j.ast.JArray;
+import org.crd2j.ast.JCRObject;
+import org.crd2j.ast.JObject;
+import org.crd2j.ast.JPrimitive;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -14,7 +18,7 @@ public class GeneratorsTest {
     void testCR() {
         // Arrange
         var cu = new CompilationUnit();
-        var cro = new CRObjectGenerator("t", "g", "v");
+        var cro = new JCRObject("t", "g", "v");
 
         // Act
         var res = cro.generateJava(cu);
@@ -27,7 +31,7 @@ public class GeneratorsTest {
     @Test
     void testPrimitive() {
         // Arrange
-        var primitive = new PrimitiveGenerator("test");
+        var primitive = new JPrimitive("test");
 
         // Act
         var res = primitive.generateJava(new CompilationUnit());
@@ -40,7 +44,7 @@ public class GeneratorsTest {
     @Test
     void testArrayOfPrimitives() {
         // Arrange
-        var array = new ArrayGenerator(new PrimitiveGenerator("primitive"));
+        var array = new JArray(new JPrimitive("primitive"));
 
         // Act
         var res = array.generateJava(new CompilationUnit());
@@ -53,7 +57,7 @@ public class GeneratorsTest {
     @Test
     void testEmptyObject() {
         // Arrange
-        var obj = new ObjectGenerator("t", null);
+        var obj = new JObject("t", null);
 
         // Act
         var res = obj.generateJava(new CompilationUnit());
@@ -71,7 +75,7 @@ public class GeneratorsTest {
         var newBool = new JSONSchemaProps();
         newBool.setType("boolean");
         props.put("o1", newBool);
-        var obj = new ObjectGenerator("t", props);
+        var obj = new JObject("t", props);
 
         // Act
         var res = obj.generateJava(cu);
@@ -89,7 +93,7 @@ public class GeneratorsTest {
     @Test
     void testArrayOfObjects() {
         // Arrange
-        var array = new ArrayGenerator(new ObjectGenerator("t", null));
+        var array = new JArray(new JObject("t", null));
 
         // Act
         var res = array.generateJava(new CompilationUnit());
@@ -107,7 +111,7 @@ public class GeneratorsTest {
         var newObj = new JSONSchemaProps();
         newObj.setType("object");
         props.put("o1", newObj);
-        var obj = new ObjectGenerator("t", props);
+        var obj = new JObject("t", props);
 
         // Act
         var res = obj.generateJava(cu);

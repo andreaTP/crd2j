@@ -1,9 +1,11 @@
-package org.crdfromjava;
+package org.crd2j;
 
 import com.github.javaparser.ast.CompilationUnit;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import org.crd2j.ast.JCRObject;
+import org.crd2j.ast.JSONSchema2Pojo;
 
 import java.io.File;
 import java.util.*;
@@ -45,11 +47,11 @@ public class CRGeneratorRunner {
 
             cu.setPackageDeclaration(pkg);
 
-            var crGenerator = new CRObjectGenerator(crName, version, group);
+            var crGenerator = new JCRObject(crName, version, group);
 
             var topLevelUUID = "TopLevel" + UUID.randomUUID().toString().replace("-", "");
             var topLevelGenerator =
-                    JSONSchemaToPojoGenerator.fromJsonSchema(topLevelUUID, crdv
+                    JSONSchema2Pojo.fromJsonSchema(topLevelUUID, crdv
                             .getSchema()
                             .getOpenAPIV3Schema());
 
