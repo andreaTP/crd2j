@@ -11,6 +11,20 @@ This project is built on top of 2 great libraries:
  - [Fabric8 Kubernetes-Client](https://github.com/fabric8io/kubernetes-client)
  - [Javaparser](https://github.com/javaparser/javaparser)
 
+## Run the generator
+
+You can generate sources with a command like:
+```bash
+mvn clean compile exec:java -Dexec.args="<source-crd> <destination-folder>"
+```
+
+for example:
+```bash
+mvn clean compile exec:java -Dexec.args="$PWD/src/test/resources/keycloak-crd.yml $PWD/.tmp"
+```
+
+---
+
 ### Build
 
 ```bash
@@ -27,16 +41,4 @@ This project uses 3 different approaches to testing:
 
 ```bash
 mvn clean test
-```
-
-## Run the generator
-
-You can generate sources with a command like:
-```bash
-mvn clean compile exec:java -Dexec.args="<source-crd> <destination-folder>"
-```
-
-for example:
-```bash
-mvn clean compile exec:java -Dexec.args="$PWD/src/test/resources/keycloak-crd.yml $PWD/.tmp"
 ```
