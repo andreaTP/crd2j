@@ -12,6 +12,10 @@ public class ArrayGenerator implements JSONSchemaToPojoGenerator {
     private JSONSchemaToPojoGenerator nested = null;
 
     ArrayGenerator(JSONSchemaProps props, JSONSchemaToPojoGenerator nested) {
+        this(nested);
+    }
+
+    ArrayGenerator(JSONSchemaToPojoGenerator nested) {
         this.type = new ClassOrInterfaceType()
                 .setName("java.util.List")
                 .setTypeArguments(new ClassOrInterfaceType().setName(nested.getType()))

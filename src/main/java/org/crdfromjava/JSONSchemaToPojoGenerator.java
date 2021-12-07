@@ -43,7 +43,7 @@ public interface JSONSchemaToPojoGenerator {
             case PRIMITIVE:
                 return new PrimitiveGenerator(nt.getName());
             case ARRAY:
-                return new ArrayGenerator(prop, fromJsonSchema(key, prop.getItems().getSchema()));
+                return new ArrayGenerator(fromJsonSchema(key, prop.getItems().getSchema()));
             case OBJECT:
                 // Taking the schema defined in AdditionalProperties instead
                 if (prop.getAdditionalProperties() != null &&

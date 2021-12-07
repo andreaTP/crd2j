@@ -11,7 +11,6 @@ public class Main {
         var dest = new File(".tmp");
 
         var runner = new CRGeneratorRunner();
-
         runner.run(source, dest);
     }
 
