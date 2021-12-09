@@ -62,7 +62,7 @@ public class CompilationTest {
     }
 
     @Test
-    void testKeycloakCRDCompiles() throws Exception {
+    void testAkkaMicroserviceCRDCompiles() throws Exception {
         // Arrange
         var crd = Path.of(this
                 .getClass()
@@ -77,6 +77,25 @@ public class CompilationTest {
         // Assert
         assertThat(compilation.errors()).isEmpty();
         assertThat(compilation.sourceFiles().size()).isEqualTo(35);
+        assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
+    }
+
+    @Test
+    void testKeycloakCRDCompiles() throws Exception {
+        // Arrange
+        var crd = Path.of(this
+                .getClass()
+                .getClassLoader()
+                .getResource("akka-microservices-crd.yml").toURI()).toFile();
+        var dest = tmpFolder.newFolder("akka-microservices");
+
+        // Act
+        runner.run(crd, dest);
+        var compilation = javac().compile(getSources(dest));
+
+        // Assert
+        assertThat(compilation.errors()).isEmpty();
+        assertThat(compilation.sourceFiles().size()).isEqualTo(27);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 

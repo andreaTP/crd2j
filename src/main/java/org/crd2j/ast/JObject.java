@@ -13,8 +13,10 @@ public class JObject implements JSONSchema2Pojo {
 
     private String type = null;
     private Map<String, JSONSchema2Pojo> fields = new HashMap<>();
+    private boolean preserveUnknownFields = false;
 
-    public JObject(String type, Map<String, JSONSchemaProps> fields) {
+    public JObject(String type, Map<String, JSONSchemaProps> fields, boolean preserveUnknownFields) {
+        this.preserveUnknownFields = preserveUnknownFields;
         this.type = type.substring(0, 1).toUpperCase() + type.substring(1);
 
         if (fields == null) {
@@ -42,8 +44,10 @@ public class JObject implements JSONSchema2Pojo {
             var prop = this.fields.get(k);
             buffer.addAll(prop.generateJava(cu));
 
-            if (!clz.getFieldByName(k).isPresent()) {
-                var objField = clz.addField(prop.getType(), k, Modifier.Keyword.PRIVATE);
+            var fieldName = sanitizeFieldName(k);
+
+            if (!clz.getFieldByName(fieldName).isPresent()) {
+                var objField = clz.addField(prop.getType(), fieldName, Modifier.Keyword.PRIVATE);
                 objField.createGetter();
                 objField.createSetter();
             } else {
@@ -54,5 +58,31 @@ public class JObject implements JSONSchema2Pojo {
 
         return buffer;
     }
+
+    private String sanitizeFieldName(String key) {
+        if (javaKeywords
+                .stream()
+                .filter((s) -> s.equals(key))
+                .findFirst()
+                .isPresent()
+        ) {
+            return "_" + key;
+        } else {
+            return key;
+        }
+    }
+
+    private List<String> javaKeywords = List.of(
+        "abstract", "continue", "for", "new", "switch",
+        "assert", "default", "goto", "package", "synchronized",
+        "boolean", "do", "if", "private", "this",
+        "break", "double", "implements", "protected", "throw",
+        "byte", "else", "import", "public", "throws",
+        "case", "enum", "instanceof", "return", "transient",
+        "catch", "extends", "int", "short", "try",
+        "char", "final", "interface", "static", "void",
+        "class", "finally", "long", "strictfp**", "volatile",
+        "const", "float", "native", "super", "while"
+    );
 }
 

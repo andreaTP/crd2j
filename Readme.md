@@ -42,3 +42,8 @@ This project uses 3 different approaches to testing:
 ```bash
 mvn clean test
 ```
+
+### TODO list
+
+- support `x-kubernetes-preserve-unknown-fields` and check it in tests
+- use an automatic formatter

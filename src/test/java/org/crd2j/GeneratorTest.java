@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GeneratorsTest {
+public class GeneratorTest {
 
     @Test
     void testCR() {
@@ -57,7 +57,7 @@ public class GeneratorsTest {
     @Test
     void testEmptyObject() {
         // Arrange
-        var obj = new JObject("t", null);
+        var obj = new JObject("t", null, false);
 
         // Act
         var res = obj.generateJava(new CompilationUnit());
@@ -75,7 +75,7 @@ public class GeneratorsTest {
         var newBool = new JSONSchemaProps();
         newBool.setType("boolean");
         props.put("o1", newBool);
-        var obj = new JObject("t", props);
+        var obj = new JObject("t", props, false);
 
         // Act
         var res = obj.generateJava(cu);
@@ -93,7 +93,7 @@ public class GeneratorsTest {
     @Test
     void testArrayOfObjects() {
         // Arrange
-        var array = new JArray(new JObject("t", null));
+        var array = new JArray(new JObject("t", null, false));
 
         // Act
         var res = array.generateJava(new CompilationUnit());
@@ -111,7 +111,7 @@ public class GeneratorsTest {
         var newObj = new JSONSchemaProps();
         newObj.setType("object");
         props.put("o1", newObj);
-        var obj = new JObject("t", props);
+        var obj = new JObject("t", props, false);
 
         // Act
         var res = obj.generateJava(cu);
@@ -126,5 +126,23 @@ public class GeneratorsTest {
         assertThat(clzT.get().getFields().size()).isEqualTo(1);
         assertThat(clzT.get().getFieldByName("o1")).isPresent();
     }
+
+//    @Test
+//    void testObjectWithPreservedFields() {
+//        // Arrange
+//        var cu = new CompilationUnit();
+//        var obj = new JObject("t", null, true);
+//
+//        // Act
+//        var res = obj.generateJava(cu);
+//
+//        // Assert
+//        assertThat(res).containsExactly("T");
+//
+//        var clzT = cu.getClassByName("T");
+//        assertThat(clzT).isPresent();
+//        assertThat(clzT.get().getExtendedTypes().size()).isEqualTo(1);
+//        assertThat(clzT.get().getExtendedTypes().get(0).getName().asString()).isEqualTo("ObjectNode");
+//    }
 
 }

@@ -50,7 +50,8 @@ public interface JSONSchema2Pojo {
                         prop.getAdditionalProperties().getSchema() != null) {
                      return fromJsonSchema(key, prop.getAdditionalProperties().getSchema());
                 } else {
-                    return new JObject(key, prop.getProperties());
+                    var preserveUnknownFields = (prop.getXKubernetesPreserveUnknownFields() != null && prop.getXKubernetesPreserveUnknownFields());
+                    return new JObject(key, prop.getProperties(), preserveUnknownFields);
                 }
             default:
                 throw new RuntimeException("unreachable " + nt.getType());

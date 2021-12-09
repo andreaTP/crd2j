@@ -1,0 +1,384 @@
+AkkaMicroservicesJavaCr[0] = package v1;
+
+@io.fabric8.kubernetes.model.annotation.Version("akka.lightbend.com")
+@io.fabric8.kubernetes.model.annotation.Group("v1")
+public class AkkaMicroservice extends io.fabric8.kubernetes.client.CustomResource<Spec, Status> implements io.fabric8.kubernetes.api.model.Namespaced {
+}
+AkkaMicroservicesJavaCr[1] = package v1;
+
+public class Spec {
+
+    private String appVersion;
+
+    public String getAppVersion() {
+        return appVersion;
+    }
+
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
+    }
+
+    private java.util.List<SecretVolumes> secretVolumes;
+
+    public java.util.List<SecretVolumes> getSecretVolumes() {
+        return secretVolumes;
+    }
+
+    public void setSecretVolumes(java.util.List<SecretVolumes> secretVolumes) {
+        this.secretVolumes = secretVolumes;
+    }
+
+    private java.util.List<String> imagePullSecrets;
+
+    public java.util.List<String> getImagePullSecrets() {
+        return imagePullSecrets;
+    }
+
+    public void setImagePullSecrets(java.util.List<String> imagePullSecrets) {
+        this.imagePullSecrets = imagePullSecrets;
+    }
+
+    private java.util.List<Roles> roles;
+
+    public java.util.List<Roles> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(java.util.List<Roles> roles) {
+        this.roles = roles;
+    }
+
+    private Jdbc jdbc;
+
+    public Jdbc getJdbc() {
+        return jdbc;
+    }
+
+    public void setJdbc(Jdbc jdbc) {
+        this.jdbc = jdbc;
+    }
+
+    private DeploymentStrategy deploymentStrategy;
+
+    public DeploymentStrategy getDeploymentStrategy() {
+        return deploymentStrategy;
+    }
+
+    public void setDeploymentStrategy(DeploymentStrategy deploymentStrategy) {
+        this.deploymentStrategy = deploymentStrategy;
+    }
+
+    private PodTemplateSpec podTemplateSpec;
+
+    public PodTemplateSpec getPodTemplateSpec() {
+        return podTemplateSpec;
+    }
+
+    public void setPodTemplateSpec(PodTemplateSpec podTemplateSpec) {
+        this.podTemplateSpec = podTemplateSpec;
+    }
+
+    private GrpcIngress grpcIngress;
+
+    public GrpcIngress getGrpcIngress() {
+        return grpcIngress;
+    }
+
+    public void setGrpcIngress(GrpcIngress grpcIngress) {
+        this.grpcIngress = grpcIngress;
+    }
+
+    private KafkaConfluentCloud kafkaConfluentCloud;
+
+    public KafkaConfluentCloud getKafkaConfluentCloud() {
+        return kafkaConfluentCloud;
+    }
+
+    public void setKafkaConfluentCloud(KafkaConfluentCloud kafkaConfluentCloud) {
+        this.kafkaConfluentCloud = kafkaConfluentCloud;
+    }
+
+    private SplitBrainResolver splitBrainResolver;
+
+    public SplitBrainResolver getSplitBrainResolver() {
+        return splitBrainResolver;
+    }
+
+    public void setSplitBrainResolver(SplitBrainResolver splitBrainResolver) {
+        this.splitBrainResolver = splitBrainResolver;
+    }
+
+    private ReadinessProbe readinessProbe;
+
+    public ReadinessProbe getReadinessProbe() {
+        return readinessProbe;
+    }
+
+    public void setReadinessProbe(ReadinessProbe readinessProbe) {
+        this.readinessProbe = readinessProbe;
+    }
+
+    private java.util.List<EnvFrom> envFrom;
+
+    public java.util.List<EnvFrom> getEnvFrom() {
+        return envFrom;
+    }
+
+    public void setEnvFrom(java.util.List<EnvFrom> envFrom) {
+        this.envFrom = envFrom;
+    }
+
+    private ConfigSecret configSecret;
+
+    public ConfigSecret getConfigSecret() {
+        return configSecret;
+    }
+
+    public void setConfigSecret(ConfigSecret configSecret) {
+        this.configSecret = configSecret;
+    }
+
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    private String imagePullPolicy;
+
+    public String getImagePullPolicy() {
+        return imagePullPolicy;
+    }
+
+    public void setImagePullPolicy(String imagePullPolicy) {
+        this.imagePullPolicy = imagePullPolicy;
+    }
+
+    private LivenessProbe livenessProbe;
+
+    public LivenessProbe getLivenessProbe() {
+        return livenessProbe;
+    }
+
+    public void setLivenessProbe(LivenessProbe livenessProbe) {
+        this.livenessProbe = livenessProbe;
+    }
+
+    private java.util.List<ExtraVolumeMounts> extraVolumeMounts;
+
+    public java.util.List<ExtraVolumeMounts> getExtraVolumeMounts() {
+        return extraVolumeMounts;
+    }
+
+    public void setExtraVolumeMounts(java.util.List<ExtraVolumeMounts> extraVolumeMounts) {
+        this.extraVolumeMounts = extraVolumeMounts;
+    }
+
+    private int replicas;
+
+    public int getReplicas() {
+        return replicas;
+    }
+
+    public void setReplicas(int replicas) {
+        this.replicas = replicas;
+    }
+
+    private String httpPort;
+
+    public String getHttpPort() {
+        return httpPort;
+    }
+
+    public void setHttpPort(String httpPort) {
+        this.httpPort = httpPort;
+    }
+
+    private String grpcPort;
+
+    public String getGrpcPort() {
+        return grpcPort;
+    }
+
+    public void setGrpcPort(String grpcPort) {
+        this.grpcPort = grpcPort;
+    }
+
+    private Resources resources;
+
+    public Resources getResources() {
+        return resources;
+    }
+
+    public void setResources(Resources resources) {
+        this.resources = resources;
+    }
+
+    private String serviceAccount;
+
+    public String getServiceAccount() {
+        return serviceAccount;
+    }
+
+    public void setServiceAccount(String serviceAccount) {
+        this.serviceAccount = serviceAccount;
+    }
+
+    private java.util.List<Env> env;
+
+    public java.util.List<Env> getEnv() {
+        return env;
+    }
+
+    public void setEnv(java.util.List<Env> env) {
+        this.env = env;
+    }
+
+    private LogbackSecret logbackSecret;
+
+    public LogbackSecret getLogbackSecret() {
+        return logbackSecret;
+    }
+
+    public void setLogbackSecret(LogbackSecret logbackSecret) {
+        this.logbackSecret = logbackSecret;
+    }
+
+    private Kafka kafka;
+
+    public Kafka getKafka() {
+        return kafka;
+    }
+
+    public void setKafka(Kafka kafka) {
+        this.kafka = kafka;
+    }
+
+    private CassandraDataStaxAstra cassandraDataStaxAstra;
+
+    public CassandraDataStaxAstra getCassandraDataStaxAstra() {
+        return cassandraDataStaxAstra;
+    }
+
+    public void setCassandraDataStaxAstra(CassandraDataStaxAstra cassandraDataStaxAstra) {
+        this.cassandraDataStaxAstra = cassandraDataStaxAstra;
+    }
+
+    private String akkaManagementPort;
+
+    public String getAkkaManagementPort() {
+        return akkaManagementPort;
+    }
+
+    public void setAkkaManagementPort(String akkaManagementPort) {
+        this.akkaManagementPort = akkaManagementPort;
+    }
+
+    private EnvSecret envSecret;
+
+    public EnvSecret getEnvSecret() {
+        return envSecret;
+    }
+
+    public void setEnvSecret(EnvSecret envSecret) {
+        this.envSecret = envSecret;
+    }
+
+    private String prometheusPort;
+
+    public String getPrometheusPort() {
+        return prometheusPort;
+    }
+
+    public void setPrometheusPort(String prometheusPort) {
+        this.prometheusPort = prometheusPort;
+    }
+
+    private String javaOptions;
+
+    public String getJavaOptions() {
+        return javaOptions;
+    }
+
+    public void setJavaOptions(String javaOptions) {
+        this.javaOptions = javaOptions;
+    }
+
+    private HttpIngress httpIngress;
+
+    public HttpIngress getHttpIngress() {
+        return httpIngress;
+    }
+
+    public void setHttpIngress(HttpIngress httpIngress) {
+        this.httpIngress = httpIngress;
+    }
+}
+AkkaMicroservicesJavaCr[2] = package v1;
+
+public class Status {
+
+    private String phase;
+
+    public String getPhase() {
+        return phase;
+    }
+
+    public void setPhase(String phase) {
+        this.phase = phase;
+    }
+
+    private String oldestPodStartTime;
+
+    public String getOldestPodStartTime() {
+        return oldestPodStartTime;
+    }
+
+    public void setOldestPodStartTime(String oldestPodStartTime) {
+        this.oldestPodStartTime = oldestPodStartTime;
+    }
+
+    private java.util.List<String> podStatus;
+
+    public java.util.List<String> getPodStatus() {
+        return podStatus;
+    }
+
+    public void setPodStatus(java.util.List<String> podStatus) {
+        this.podStatus = podStatus;
+    }
+
+    private AkkaClusterStatus akkaClusterStatus;
+
+    public AkkaClusterStatus getAkkaClusterStatus() {
+        return akkaClusterStatus;
+    }
+
+    public void setAkkaClusterStatus(AkkaClusterStatus akkaClusterStatus) {
+        this.akkaClusterStatus = akkaClusterStatus;
+    }
+
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    private int availableReplicas;
+
+    public int getAvailableReplicas() {
+        return availableReplicas;
+    }
+
+    public void setAvailableReplicas(int availableReplicas) {
+        this.availableReplicas = availableReplicas;
+    }
+}
