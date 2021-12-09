@@ -125,11 +125,7 @@ public class CompilationTest {
     void testSparkCRDCompiles() throws Exception {
         // Arrange
         var crd =
-                Path.of(
-                                this.getClass()
-                                        .getClassLoader()
-                                        .getResource("spark-crd.yml")
-                                        .toURI())
+                Path.of(this.getClass().getClassLoader().getResource("spark-crd.yml").toURI())
                         .toFile();
         var dest = tmpFolder.newFolder("spark");
 

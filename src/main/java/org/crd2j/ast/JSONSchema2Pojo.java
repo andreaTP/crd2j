@@ -1,10 +1,10 @@
 package org.crd2j.ast;
 
+import static org.crd2j.ast.Keywords.javaKeywords;
+
 import com.github.javaparser.ast.CompilationUnit;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 import java.util.List;
-
-import static org.crd2j.ast.Keywords.javaKeywords;
 
 public interface JSONSchema2Pojo {
 

@@ -20,7 +20,9 @@ public class JObject implements JSONSchema2Pojo {
     public JObject(
             String type, Map<String, JSONSchemaProps> fields, boolean preserveUnknownFields) {
         this.preserveUnknownFields = preserveUnknownFields;
-        this.type = JSONSchema2Pojo.sanitizeString(type.substring(0, 1).toUpperCase() + type.substring(1));
+        this.type =
+                JSONSchema2Pojo.sanitizeString(
+                        type.substring(0, 1).toUpperCase() + type.substring(1));
 
         if (fields == null) {
             // no fields ???
@@ -85,7 +87,9 @@ public class JObject implements JSONSchema2Pojo {
                     objField.createGetter();
                     objField.createSetter();
                 } catch (Exception cause) {
-                    throw new RuntimeException("Error generating field " + fieldName + " with type " + prop.getType(), cause);
+                    throw new RuntimeException(
+                            "Error generating field " + fieldName + " with type " + prop.getType(),
+                            cause);
                 }
             } else {
                 // Warning ???
@@ -95,5 +99,4 @@ public class JObject implements JSONSchema2Pojo {
 
         return buffer;
     }
-
 }

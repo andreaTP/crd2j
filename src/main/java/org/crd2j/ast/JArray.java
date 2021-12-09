@@ -13,7 +13,9 @@ public class JArray implements JSONSchema2Pojo {
         this.type =
                 new ClassOrInterfaceType()
                         .setName("java.util.List")
-                        .setTypeArguments(new ClassOrInterfaceType().setName(JSONSchema2Pojo.sanitizeString(nested.getType())))
+                        .setTypeArguments(
+                                new ClassOrInterfaceType()
+                                        .setName(JSONSchema2Pojo.sanitizeString(nested.getType())))
                         .toString();
         this.nested = nested;
     }
