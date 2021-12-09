@@ -157,7 +157,7 @@ public class CompilationTest {
 
         // Assert
         assertThat(compilation.errors()).isEmpty();
-        assertThat(compilation.sourceFiles().size()).isEqualTo(75);
+        assertThat(compilation.sourceFiles().size()).isEqualTo(73);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
