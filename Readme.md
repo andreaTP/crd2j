@@ -47,8 +47,3 @@ mvn clean test
 
  - `IntOrString` is encoded using the `io.fabric8.kubernetes.api.model.IntOrString` type
  - `x-kubernetes-preserve-unknown-fields` is mapped using additional properties into objects
-
-### TODO list
-
-- support `x-kubernetes-preserve-unknown-fields` and check it in tests
-- use an automatic formatter
