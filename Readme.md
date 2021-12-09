@@ -45,5 +45,10 @@ mvn clean test
 
 ### Features
 
- - `IntOrString` is encoded using the `io.fabric8.kubernetes.api.model.IntOrString` type
+ - `x-kubernetes-int-or-string` is encoded using the `io.fabric8.kubernetes.api.model.IntOrString` type
  - `x-kubernetes-preserve-unknown-fields` is mapped using additional properties into objects
+
+### Next
+
+ - command line application (binaries?)
+ - Maven plugin
