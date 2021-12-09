@@ -1,7 +1,15 @@
 package org.crd2j.ast;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.visitor.GenericVisitor;
+import com.github.javaparser.ast.visitor.VoidVisitor;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 
 import java.util.ArrayList;
@@ -38,6 +46,32 @@ public class JObject implements JSONSchema2Pojo {
     @Override
     public List<String> generateJava(CompilationUnit cu) {
         var clz = cu.getClassByName(this.type).orElse(cu.addClass(this.type));
+
+        if (this.preserveUnknownFields) {
+            if (!clz.getFieldByName("properties").isPresent()) {
+                var mapType = new ClassOrInterfaceType()
+                        .setName("java.util.Map")
+                        .setTypeArguments(
+                                new ClassOrInterfaceType().setName("String"),
+                                new ClassOrInterfaceType().setName("Object")
+                        );
+                var objField = clz.addField(mapType, "properties", Modifier.Keyword.PRIVATE);
+                objField.setVariables(new NodeList<>(
+                        new VariableDeclarator()
+                                .setName("properties")
+                                .setType(mapType)
+                                .setInitializer("new java.util.HashMap<String, Object>()")));
+
+                objField.addAnnotation("com.fasterxml.jackson.annotation.JsonIgnore");
+                objField.addAnnotation("com.fasterxml.jackson.annotation.JsonAnyGetter");
+                objField.addAnnotation("com.fasterxml.jackson.annotation.JsonAnySetter");
+
+                objField.createGetter();
+                objField.createSetter();
+            } else {
+                // Warning ???
+            }
+        }
 
         var buffer = new ArrayList<String>(this.fields.size() + 1);
         for (var k : this.fields.keySet()) {
