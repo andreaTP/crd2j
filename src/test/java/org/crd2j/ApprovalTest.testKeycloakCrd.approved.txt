@@ -8,13 +8,13 @@ KeycloakJavaCr[1] = package v1alpha1;
 
 public class Spec {
 
-    private int instances;
+    private Integer instances;
 
-    public int getInstances() {
+    public Integer getInstances() {
         return instances;
     }
 
-    public void setInstances(int instances) {
+    public void setInstances(Integer instances) {
         this.instances = instances;
     }
 
@@ -98,13 +98,13 @@ public class Spec {
         this.multiAvailablityZones = multiAvailablityZones;
     }
 
-    private boolean unmanaged;
+    private Boolean unmanaged;
 
-    public boolean getUnmanaged() {
+    public Boolean getUnmanaged() {
         return unmanaged;
     }
 
-    public void setUnmanaged(boolean unmanaged) {
+    public void setUnmanaged(Boolean unmanaged) {
         this.unmanaged = unmanaged;
     }
 
@@ -182,13 +182,13 @@ public class Status {
         this.credentialSecret = credentialSecret;
     }
 
-    private boolean ready;
+    private Boolean ready;
 
-    public boolean getReady() {
+    public Boolean getReady() {
         return ready;
     }
 
-    public void setReady(boolean ready) {
+    public void setReady(Boolean ready) {
         this.ready = ready;
     }
 

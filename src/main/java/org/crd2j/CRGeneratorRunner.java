@@ -71,7 +71,7 @@ public class CRGeneratorRunner {
         packageName.append(stack.pop());
         for (var s : stack) {
             packageName.append(".");
-            packageName.append(s);
+            packageName.append(s.replace("-", "_"));
         }
 
         return Optional.of(packageName.toString());

@@ -4,11 +4,28 @@ import com.github.javaparser.ast.CompilationUnit;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 import java.util.List;
 
+import static org.crd2j.ast.Keywords.javaKeywords;
+
 public interface JSONSchema2Pojo {
 
     String getType();
 
     List<String> generateJava(CompilationUnit cu);
+
+    static String sanitizeString(String str) {
+        var sanitized = "";
+        if (javaKeywords.stream().filter((s) -> s.equals(str)).findFirst().isPresent()) {
+            sanitized = "_" + str;
+        } else {
+            sanitized = str;
+        }
+
+        if (sanitized.startsWith("-")) {
+            sanitized = sanitized.replaceFirst("-", "minus");
+        }
+
+        return sanitized;
+    }
 
     static JSONSchema2Pojo fromJsonSchema(String key, JSONSchemaProps prop) {
         if (prop.getXKubernetesIntOrString() != null && prop.getXKubernetesIntOrString()) {
@@ -19,9 +36,9 @@ public interface JSONSchema2Pojo {
         } else {
             switch (prop.getType()) {
                 case "boolean":
-                    return fromJsonSchema(key, new JPrimitiveNameAndType("boolean"), prop);
+                    return fromJsonSchema(key, new JPrimitiveNameAndType("Boolean"), prop);
                 case "integer":
-                    return fromJsonSchema(key, new JPrimitiveNameAndType("int"), prop);
+                    return fromJsonSchema(key, new JPrimitiveNameAndType("Integer"), prop);
                 case "string":
                     return fromJsonSchema(key, new JPrimitiveNameAndType("String"), prop);
                 case "object":

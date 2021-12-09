@@ -95,7 +95,7 @@ public class ApprovalTest {
                         writable.getJavaClass("Status")));
     }
 
-    // Check that the encoding for the preserved fields is kept
+    // Sanity-Check that the encoding for the preserved fields is kept (cross-checked in unit tests)
     @Test
     void testPreservedFieldsTestImplementationCrd() {
         // Arrange

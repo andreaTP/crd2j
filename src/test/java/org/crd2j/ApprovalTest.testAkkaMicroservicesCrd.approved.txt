@@ -178,13 +178,13 @@ public class Spec {
         this.extraVolumeMounts = extraVolumeMounts;
     }
 
-    private int replicas;
+    private Integer replicas;
 
-    public int getReplicas() {
+    public Integer getReplicas() {
         return replicas;
     }
 
-    public void setReplicas(int replicas) {
+    public void setReplicas(Integer replicas) {
         this.replicas = replicas;
     }
 
@@ -372,13 +372,13 @@ public class Status {
         this.message = message;
     }
 
-    private int availableReplicas;
+    private Integer availableReplicas;
 
-    public int getAvailableReplicas() {
+    public Integer getAvailableReplicas() {
         return availableReplicas;
     }
 
-    public void setAvailableReplicas(int availableReplicas) {
+    public void setAvailableReplicas(Integer availableReplicas) {
         this.availableReplicas = availableReplicas;
     }
 }

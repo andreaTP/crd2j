@@ -78,7 +78,7 @@ public class CompilationTest {
     }
 
     @Test
-    void testKeycloakCRDCompiles() throws Exception {
+    void testAkkaMicroservicesCRDCompiles() throws Exception {
         // Arrange
         var crd =
                 Path.of(
@@ -96,6 +96,72 @@ public class CompilationTest {
         // Assert
         assertThat(compilation.errors()).isEmpty();
         assertThat(compilation.sourceFiles().size()).isEqualTo(27);
+        assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
+    }
+
+    @Test
+    void testStrimziCRDCompiles() throws Exception {
+        // Arrange
+        var crd =
+                Path.of(
+                                this.getClass()
+                                        .getClassLoader()
+                                        .getResource("strimzi-kafka-crd.yml")
+                                        .toURI())
+                        .toFile();
+        var dest = tmpFolder.newFolder("strimzi-kafka");
+
+        // Act
+        runner.run(crd, dest);
+        var compilation = javac().compile(getSources(dest));
+
+        // Assert
+        assertThat(compilation.errors()).isEmpty();
+        assertThat(compilation.sourceFiles().size()).isEqualTo(109);
+        assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
+    }
+
+    @Test
+    void testSparkCRDCompiles() throws Exception {
+        // Arrange
+        var crd =
+                Path.of(
+                                this.getClass()
+                                        .getClassLoader()
+                                        .getResource("spark-crd.yml")
+                                        .toURI())
+                        .toFile();
+        var dest = tmpFolder.newFolder("spark");
+
+        // Act
+        runner.run(crd, dest);
+        var compilation = javac().compile(getSources(dest));
+
+        // Assert
+        assertThat(compilation.errors()).isEmpty();
+        assertThat(compilation.sourceFiles().size()).isEqualTo(100);
+        assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
+    }
+
+    @Test
+    void testCrunchyCRDCompiles() throws Exception {
+        // Arrange
+        var crd =
+                Path.of(
+                                this.getClass()
+                                        .getClassLoader()
+                                        .getResource("crunchy-postgres-crd.yml")
+                                        .toURI())
+                        .toFile();
+        var dest = tmpFolder.newFolder("crunchy");
+
+        // Act
+        runner.run(crd, dest);
+        var compilation = javac().compile(getSources(dest));
+
+        // Assert
+        assertThat(compilation.errors()).isEmpty();
+        assertThat(compilation.sourceFiles().size()).isEqualTo(75);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
