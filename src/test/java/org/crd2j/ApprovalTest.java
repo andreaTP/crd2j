@@ -94,4 +94,30 @@ public class ApprovalTest {
                         writable.getJavaClass("Spec"),
                         writable.getJavaClass("Status")));
     }
+
+    // Check that the encoding for the preserved fields is kept
+    @Test
+    void testPreservedFieldsTestImplementationCrd() {
+        // Arrange
+        var crd =
+                client.apiextensions()
+                        .v1()
+                        .customResourceDefinitions()
+                        .load(
+                                this.getClass()
+                                        .getClassLoader()
+                                        .getResource("preserved-fields-crd.yml"))
+                        .get();
+
+        // Act
+        var writables = runner.generate(crd, Optional.empty());
+
+        // Assert
+        assertThat(writables.size()).isEqualTo(1);
+
+        var writable = writables.get(0);
+
+        Approvals.verifyAll(
+                "PreservedFieldsJavaCr", List.of(writable.getJavaClass("TestPreservedFields")));
+    }
 }

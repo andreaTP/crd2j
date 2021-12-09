@@ -1,4 +1,4 @@
-package org.crd2j;
+PreservedFieldsJavaCr[0] = package v1;
 
 public class TestPreservedFields {
 

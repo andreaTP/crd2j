@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.ast.CompilationUnit;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import org.crd2j.ast.JArray;
 import org.crd2j.ast.JCRObject;
@@ -145,7 +147,29 @@ public class GeneratorTest {
         assertThat(clzT.get().getFieldByName("properties")).isPresent();
     }
 
-    // TODO: those test should test an actual generated class and not a committed file
+    // This test ensures that the file commited in the sources reflects what is generated
+    @Test
+    void testPreservedFieldsClassReflectsGenerated() throws Exception {
+        // Arrange
+        var basePath = "./src/test/java/org/crd2j/";
+        var sourceFile = Path.of(basePath + "TestPreservedFields.java");
+        var approvedFile =
+                Path.of(
+                        basePath
+                                + "ApprovalTest.testPreservedFieldsTestImplementationCrd.approved.txt");
+
+        // Act
+        var sourceTxt = Files.readString(sourceFile).trim();
+        var approvedTxt =
+                Files.readString(approvedFile)
+                        .replace("PreservedFieldsJavaCr[0] = ", "")
+                        .replace("package v1;", "package org.crd2j;")
+                        .trim();
+
+        // Assert
+        assertThat(sourceTxt).isEqualTo(approvedTxt);
+    }
+
     @Test
     void testJacksonPreserveSimpleFieldsDeserializing() throws JsonProcessingException {
         // Arrange
@@ -180,14 +204,32 @@ public class GeneratorTest {
         var example = new TestPreservedFields();
         var additionalFields = new HashMap<String, Object>();
         additionalFields.put("extra2", "simple-value");
+        example.setProperties(additionalFields);
 
         // Act
-        example.setProperties(additionalFields);
         var serialized = om.writeValueAsString(example);
         var deserialized = om.readValue(serialized, TestPreservedFields.class);
 
         // Assert
+        assertThat(serialized).isEqualTo("{\"extra2\":\"simple-value\"}");
         assertThat(deserialized.getProperties().get("extra2")).isEqualTo("simple-value");
         assertThat(deserialized.getProperties().get("properties")).isNull();
+    }
+
+    @Test
+    void testJacksonPreservationRoundTrip() throws JsonProcessingException {
+        // Arrange
+        var om = new ObjectMapper();
+        var serializedOne = "{\"extra3\":\"my-value-again\"}";
+
+        // Act
+        var deserializingOne = om.readValue(serializedOne, TestPreservedFields.class);
+        var serializedTwo = om.writeValueAsString(deserializingOne);
+        var deserializedTwo = om.readValue(serializedTwo, TestPreservedFields.class);
+        var serializedThree = om.writeValueAsString(deserializingOne);
+
+        // Assert
+        assertThat(deserializedTwo.getProperties().get("extra3")).isEqualTo("my-value-again");
+        assertThat(serializedThree).isEqualTo(serializedOne);
     }
 }

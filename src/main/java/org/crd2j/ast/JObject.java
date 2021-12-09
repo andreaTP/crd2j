@@ -59,12 +59,13 @@ public class JObject implements JSONSchema2Pojo {
                                         .setInitializer(
                                                 "new java.util.HashMap<String, Object>()")));
 
-                objField.addAnnotation("com.fasterxml.jackson.annotation.JsonIgnore");
                 objField.addAnnotation("com.fasterxml.jackson.annotation.JsonAnyGetter");
                 objField.addAnnotation("com.fasterxml.jackson.annotation.JsonAnySetter");
 
-                objField.createGetter();
-                objField.createSetter();
+                objField.createGetter()
+                        .addAnnotation("com.fasterxml.jackson.annotation.JsonIgnore");
+                objField.createSetter()
+                        .addAnnotation("com.fasterxml.jackson.annotation.JsonProperty");
             } else {
                 // Warning ???
             }
