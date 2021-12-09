@@ -11,5 +11,4 @@ public class Main {
         var runner = new CRGeneratorRunner();
         runner.run(source, dest);
     }
-
 }

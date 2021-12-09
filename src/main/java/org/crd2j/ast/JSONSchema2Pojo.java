@@ -2,7 +2,6 @@ package org.crd2j.ast;
 
 import com.github.javaparser.ast.CompilationUnit;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
-
 import java.util.List;
 
 public interface JSONSchema2Pojo {
@@ -13,7 +12,10 @@ public interface JSONSchema2Pojo {
 
     static JSONSchema2Pojo fromJsonSchema(String key, JSONSchemaProps prop) {
         if (prop.getXKubernetesIntOrString() != null && prop.getXKubernetesIntOrString()) {
-            return fromJsonSchema(key, new JPrimitiveNameAndType("io.fabric8.kubernetes.api.model.IntOrString"), prop);
+            return fromJsonSchema(
+                    key,
+                    new JPrimitiveNameAndType("io.fabric8.kubernetes.api.model.IntOrString"),
+                    prop);
         } else {
             switch (prop.getType()) {
                 case "boolean":
@@ -24,8 +26,8 @@ public interface JSONSchema2Pojo {
                     return fromJsonSchema(key, new JPrimitiveNameAndType("String"), prop);
                 case "object":
                     // Taking the schema defined in AdditionalProperties instead
-                    if (prop.getAdditionalProperties() != null &&
-                            prop.getAdditionalProperties().getSchema() != null) {
+                    if (prop.getAdditionalProperties() != null
+                            && prop.getAdditionalProperties().getSchema() != null) {
                         return fromJsonSchema(key, prop.getAdditionalProperties().getSchema());
                     } else {
                         return fromJsonSchema(key, new JObjectNameAndType(key), prop);
@@ -38,7 +40,8 @@ public interface JSONSchema2Pojo {
         }
     }
 
-    private static JSONSchema2Pojo fromJsonSchema(String key, JavaNameAndType nt, JSONSchemaProps prop) {
+    private static JSONSchema2Pojo fromJsonSchema(
+            String key, JavaNameAndType nt, JSONSchemaProps prop) {
         switch (nt.getType()) {
             case PRIMITIVE:
                 return new JPrimitive(nt.getName());
@@ -46,11 +49,13 @@ public interface JSONSchema2Pojo {
                 return new JArray(fromJsonSchema(key, prop.getItems().getSchema()));
             case OBJECT:
                 // Taking the schema defined in AdditionalProperties instead
-                if (prop.getAdditionalProperties() != null &&
-                        prop.getAdditionalProperties().getSchema() != null) {
-                     return fromJsonSchema(key, prop.getAdditionalProperties().getSchema());
+                if (prop.getAdditionalProperties() != null
+                        && prop.getAdditionalProperties().getSchema() != null) {
+                    return fromJsonSchema(key, prop.getAdditionalProperties().getSchema());
                 } else {
-                    var preserveUnknownFields = (prop.getXKubernetesPreserveUnknownFields() != null && prop.getXKubernetesPreserveUnknownFields());
+                    var preserveUnknownFields =
+                            (prop.getXKubernetesPreserveUnknownFields() != null
+                                    && prop.getXKubernetesPreserveUnknownFields());
                     return new JObject(key, prop.getProperties(), preserveUnknownFields);
                 }
             default:

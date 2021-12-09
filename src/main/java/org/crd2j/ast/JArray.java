@@ -2,7 +2,6 @@ package org.crd2j.ast;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-
 import java.util.List;
 
 public class JArray implements JSONSchema2Pojo {
@@ -11,10 +10,11 @@ public class JArray implements JSONSchema2Pojo {
     private JSONSchema2Pojo nested = null;
 
     public JArray(JSONSchema2Pojo nested) {
-        this.type = new ClassOrInterfaceType()
-                .setName("java.util.List")
-                .setTypeArguments(new ClassOrInterfaceType().setName(nested.getType()))
-                .toString();
+        this.type =
+                new ClassOrInterfaceType()
+                        .setName("java.util.List")
+                        .setTypeArguments(new ClassOrInterfaceType().setName(nested.getType()))
+                        .toString();
         this.nested = nested;
     }
 

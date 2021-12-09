@@ -1,7 +1,6 @@
 package org.crd2j.ast;
 
 import com.github.javaparser.ast.CompilationUnit;
-
 import java.util.List;
 
 public class JPrimitive implements JSONSchema2Pojo {

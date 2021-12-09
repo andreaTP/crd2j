@@ -1,19 +1,17 @@
 package org.crd2j;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.ast.CompilationUnit;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
+import java.util.HashMap;
 import org.crd2j.ast.JArray;
 import org.crd2j.ast.JCRObject;
 import org.crd2j.ast.JObject;
 import org.crd2j.ast.JPrimitive;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GeneratorTest {
 
@@ -171,7 +169,8 @@ public class GeneratorTest {
         var deserialized = om.readValue(serialized, TestPreservedFields.class);
 
         // Assert
-        assertThat(om.valueToTree(deserialized.getProperties().get("extra1")).get("key").asText()).isEqualTo("my-value");
+        assertThat(om.valueToTree(deserialized.getProperties().get("extra1")).get("key").asText())
+                .isEqualTo("my-value");
     }
 
     @Test
@@ -187,10 +186,8 @@ public class GeneratorTest {
         var serialized = om.writeValueAsString(example);
         var deserialized = om.readValue(serialized, TestPreservedFields.class);
 
-
         // Assert
         assertThat(deserialized.getProperties().get("extra2")).isEqualTo("simple-value");
         assertThat(deserialized.getProperties().get("properties")).isNull();
     }
-
 }

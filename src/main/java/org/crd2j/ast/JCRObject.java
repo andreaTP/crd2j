@@ -5,7 +5,6 @@ import com.github.javaparser.ast.expr.Name;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-
 import java.util.List;
 
 public class JCRObject implements JSONSchema2Pojo {
@@ -38,9 +37,12 @@ public class JCRObject implements JSONSchema2Pojo {
                         new Name("io.fabric8.kubernetes.model.annotation.Group"),
                         new StringLiteralExpr(group)));
 
-        var crType = new ClassOrInterfaceType()
-                .setName("io.fabric8.kubernetes.client.CustomResource")
-                .setTypeArguments(new ClassOrInterfaceType().setName("Spec"), new ClassOrInterfaceType().setName("Status"));
+        var crType =
+                new ClassOrInterfaceType()
+                        .setName("io.fabric8.kubernetes.client.CustomResource")
+                        .setTypeArguments(
+                                new ClassOrInterfaceType().setName("Spec"),
+                                new ClassOrInterfaceType().setName("Status"));
 
         clz.addExtendedType(crType);
         clz.addImplementedType("io.fabric8.kubernetes.api.model.Namespaced");

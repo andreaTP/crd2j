@@ -1,22 +1,21 @@
 package org.crd2j;
 
+import static com.google.testing.compile.Compiler.javac;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.rules.TemporaryFolder;
-
-import javax.tools.JavaFileObject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.testing.compile.Compiler.javac;
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.tools.JavaFileObject;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class CompilationTest {
 
@@ -45,10 +44,9 @@ public class CompilationTest {
     @Test
     void testCrontabCRDCompiles() throws Exception {
         // Arrange
-        var crd = Path.of(this
-                .getClass()
-                .getClassLoader()
-                .getResource("crontab-crd.yml").toURI()).toFile();
+        var crd =
+                Path.of(this.getClass().getClassLoader().getResource("crontab-crd.yml").toURI())
+                        .toFile();
         var dest = tmpFolder.newFolder("crontab");
 
         // Act
@@ -64,10 +62,9 @@ public class CompilationTest {
     @Test
     void testAkkaMicroserviceCRDCompiles() throws Exception {
         // Arrange
-        var crd = Path.of(this
-                .getClass()
-                .getClassLoader()
-                .getResource("keycloak-crd.yml").toURI()).toFile();
+        var crd =
+                Path.of(this.getClass().getClassLoader().getResource("keycloak-crd.yml").toURI())
+                        .toFile();
         var dest = tmpFolder.newFolder("keycloak");
 
         // Act
@@ -83,10 +80,13 @@ public class CompilationTest {
     @Test
     void testKeycloakCRDCompiles() throws Exception {
         // Arrange
-        var crd = Path.of(this
-                .getClass()
-                .getClassLoader()
-                .getResource("akka-microservices-crd.yml").toURI()).toFile();
+        var crd =
+                Path.of(
+                                this.getClass()
+                                        .getClassLoader()
+                                        .getResource("akka-microservices-crd.yml")
+                                        .toURI())
+                        .toFile();
         var dest = tmpFolder.newFolder("akka-microservices");
 
         // Act
@@ -100,7 +100,7 @@ public class CompilationTest {
     }
 
     @AfterAll
-    public static void afterAll(){
+    public static void afterAll() {
         tmpFolder.delete();
     }
 }

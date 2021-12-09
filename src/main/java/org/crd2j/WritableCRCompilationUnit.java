@@ -1,7 +1,6 @@
 package org.crd2j;
 
 import com.github.javaparser.ast.CompilationUnit;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +20,10 @@ public class WritableCRCompilationUnit {
 
     public void writeAllJavaClasses(File basePath) {
         try {
-            var finalPath = createFolders(cu.getPackageDeclaration().map((p) -> p.getName().asString()), basePath);
+            var finalPath =
+                    createFolders(
+                            cu.getPackageDeclaration().map((p) -> p.getName().asString()),
+                            basePath);
             for (var cn : this.classNames) writeJavaClass(finalPath, cn);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -30,7 +32,7 @@ public class WritableCRCompilationUnit {
 
     String getJavaClass(String name) {
         var clazz = cu.getClassByName(name);
-        assert(clazz.isPresent());
+        assert (clazz.isPresent());
 
         var content = new StringBuilder();
         cu.getPackageDeclaration().ifPresent((p) -> content.append(p));
@@ -42,9 +44,7 @@ public class WritableCRCompilationUnit {
     private void writeJavaClass(File basePath, String name) throws IOException {
         var content = getJavaClass(name);
 
-        writeToFile(
-                basePath.toPath().resolve(name + ".java").toFile(),
-                content.toString());
+        writeToFile(basePath.toPath().resolve(name + ".java").toFile(), content.toString());
     }
 
     private void writeToFile(File file, String str) throws IOException {
@@ -61,12 +61,11 @@ public class WritableCRCompilationUnit {
     private static File createFolders(Optional<String> pkg, File folder) {
         var destFolder = folder.toPath();
         if (pkg.isPresent()) {
-            for (var p: pkg.get().split("\\.")) {
+            for (var p : pkg.get().split("\\.")) {
                 destFolder = destFolder.resolve(p);
             }
         }
         destFolder.toFile().mkdirs();
         return destFolder.toFile();
     }
-
 }
