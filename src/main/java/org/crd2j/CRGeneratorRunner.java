@@ -42,15 +42,20 @@ public class CRGeneratorRunner {
 
             var crGenerator = new JCRObject(crName, version, group);
 
-            var topLevelUUID = "TopLevel" + UUID.randomUUID().toString().replace("-", "");
-            var topLevelGenerator =
+            var specGenerator =
                     JSONSchema2Pojo.fromJsonSchema(
-                            topLevelUUID, crdv.getSchema().getOpenAPIV3Schema());
+                            "spec", crdv.getSchema().getOpenAPIV3Schema().getProperties().get("spec"), crName, "");
+
+            var statusGenerator =
+                    JSONSchema2Pojo.fromJsonSchema(
+                            "status", crdv.getSchema().getOpenAPIV3Schema().getProperties().get("status"), crName, "");
+
 
             var classNames = new ArrayList<String>();
+
             classNames.addAll(crGenerator.generateJava(cu));
-            classNames.addAll(topLevelGenerator.generateJava(cu));
-            classNames.remove(topLevelUUID);
+            classNames.addAll(specGenerator.generateJava(cu));
+            classNames.addAll(statusGenerator.generateJava(cu));
 
             writableCUs.add(new WritableCRCompilationUnit(cu, classNames));
         }

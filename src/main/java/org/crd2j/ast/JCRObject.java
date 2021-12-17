@@ -41,8 +41,8 @@ public class JCRObject implements JSONSchema2Pojo {
                 new ClassOrInterfaceType()
                         .setName("io.fabric8.kubernetes.client.CustomResource")
                         .setTypeArguments(
-                                new ClassOrInterfaceType().setName("Spec"),
-                                new ClassOrInterfaceType().setName("Status"));
+                                new ClassOrInterfaceType().setName(this.type + "Spec"),
+                                new ClassOrInterfaceType().setName(this.type + "Status"));
 
         clz.addExtendedType(crType);
         clz.addImplementedType("io.fabric8.kubernetes.api.model.Namespaced");
