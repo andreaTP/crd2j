@@ -161,6 +161,24 @@ public class CompilationTest {
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
+    @Test
+    void testKameletCRDCompiles() throws Exception {
+        // Arrange
+        var crd =
+                Path.of(this.getClass().getClassLoader().getResource("kamelet-crd.yml").toURI())
+                        .toFile();
+        var dest = tmpFolder.newFolder("kamelet");
+
+        // Act
+        runner.run(crd, dest);
+        var compilation = javac().compile(getSources(dest));
+
+        // Assert
+        assertThat(compilation.errors()).isEmpty();
+        assertThat(compilation.sourceFiles().size()).isEqualTo(14);
+        assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
+    }
+
     @AfterAll
     public static void afterAll() {
         tmpFolder.delete();

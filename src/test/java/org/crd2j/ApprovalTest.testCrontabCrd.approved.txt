@@ -28,13 +28,13 @@ public class Spec {
         this.cronSpec = cronSpec;
     }
 
-    private Integer replicas;
+    private Long replicas;
 
-    public Integer getReplicas() {
+    public Long getReplicas() {
         return replicas;
     }
 
-    public void setReplicas(Integer replicas) {
+    public void setReplicas(Long replicas) {
         this.replicas = replicas;
     }
 }
@@ -42,13 +42,13 @@ CrontabJavaCr[2] = package v1;
 
 public class Status {
 
-    private Integer replicas;
+    private Long replicas;
 
-    public Integer getReplicas() {
+    public Long getReplicas() {
         return replicas;
     }
 
-    public void setReplicas(Integer replicas) {
+    public void setReplicas(Long replicas) {
         this.replicas = replicas;
     }
 

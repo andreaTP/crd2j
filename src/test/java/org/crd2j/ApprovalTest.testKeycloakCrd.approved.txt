@@ -8,13 +8,13 @@ KeycloakJavaCr[1] = package v1alpha1;
 
 public class Spec {
 
-    private Integer instances;
+    private Long instances;
 
-    public Integer getInstances() {
+    public Long getInstances() {
         return instances;
     }
 
-    public void setInstances(Integer instances) {
+    public void setInstances(Long instances) {
         this.instances = instances;
     }
 

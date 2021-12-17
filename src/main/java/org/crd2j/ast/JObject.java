@@ -6,16 +6,16 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JObject implements JSONSchema2Pojo {
 
     private String type = null;
     private Map<String, JSONSchema2Pojo> fields = new HashMap<>();
     private boolean preserveUnknownFields = false;
+
+    private Set<String> ignoredFields =
+            Set.of("description", "schema", "example", "examples", "default");
 
     public JObject(
             String type, Map<String, JSONSchemaProps> fields, boolean preserveUnknownFields) {
@@ -25,12 +25,13 @@ public class JObject implements JSONSchema2Pojo {
                         type.substring(0, 1).toUpperCase() + type.substring(1));
 
         if (fields == null) {
-            // no fields ???
+            // no fields
         } else {
             for (var field : fields.entrySet()) {
-                this.fields.put(
-                        field.getKey(),
-                        JSONSchema2Pojo.fromJsonSchema(field.getKey(), field.getValue()));
+                if (!ignoredFields.contains(field.getKey()))
+                    this.fields.put(
+                            field.getKey(),
+                            JSONSchema2Pojo.fromJsonSchema(field.getKey(), field.getValue()));
             }
         }
     }

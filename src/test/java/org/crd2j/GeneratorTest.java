@@ -9,10 +9,7 @@ import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import org.crd2j.ast.JArray;
-import org.crd2j.ast.JCRObject;
-import org.crd2j.ast.JObject;
-import org.crd2j.ast.JPrimitive;
+import org.crd2j.ast.*;
 import org.junit.jupiter.api.Test;
 
 public class GeneratorTest {
