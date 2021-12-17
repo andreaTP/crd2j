@@ -1,15 +1,15 @@
-//package org.crd2j;
+// package org.crd2j;
 //
-//import static org.assertj.core.api.Assertions.assertThat;
+// import static org.assertj.core.api.Assertions.assertThat;
 //
-//import io.fabric8.kubernetes.client.DefaultKubernetesClient;
-//import io.fabric8.kubernetes.client.KubernetesClient;
-//import java.util.List;
-//import java.util.Optional;
-//import org.approvaltests.Approvals;
-//import org.junit.jupiter.api.Test;
+// import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+// import io.fabric8.kubernetes.client.KubernetesClient;
+// import java.util.List;
+// import java.util.Optional;
+// import org.approvaltests.Approvals;
+// import org.junit.jupiter.api.Test;
 //
-//public class ApprovalTest {
+// public class ApprovalTest {
 //
 //    KubernetesClient client = new DefaultKubernetesClient();
 //    CRGeneratorRunner runner = new CRGeneratorRunner();
@@ -95,7 +95,8 @@
 //                        writable.getJavaClass("Status")));
 //    }
 //
-//    // Sanity-Check that the encoding for the preserved fields is kept (cross-checked in unit tests)
+//    // Sanity-Check that the encoding for the preserved fields is kept (cross-checked in unit
+// tests)
 //    @Test
 //    void testPreservedFieldsTestImplementationCrd() {
 //        // Arrange
@@ -120,4 +121,4 @@
 //        Approvals.verifyAll(
 //                "PreservedFieldsJavaCr", List.of(writable.getJavaClass("TestPreservedFields")));
 //    }
-//}
+// }

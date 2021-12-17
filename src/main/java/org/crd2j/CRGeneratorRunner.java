@@ -44,12 +44,17 @@ public class CRGeneratorRunner {
 
             var specGenerator =
                     JSONSchema2Pojo.fromJsonSchema(
-                            "spec", crdv.getSchema().getOpenAPIV3Schema().getProperties().get("spec"), crName, "");
+                            "spec",
+                            crdv.getSchema().getOpenAPIV3Schema().getProperties().get("spec"),
+                            crName,
+                            "");
 
             var statusGenerator =
                     JSONSchema2Pojo.fromJsonSchema(
-                            "status", crdv.getSchema().getOpenAPIV3Schema().getProperties().get("status"), crName, "");
-
+                            "status",
+                            crdv.getSchema().getOpenAPIV3Schema().getProperties().get("status"),
+                            crName,
+                            "");
 
             var classNames = new ArrayList<String>();
 

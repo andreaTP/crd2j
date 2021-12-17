@@ -1,14 +1,11 @@
 package org.crd2j.ast;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import com.github.javaparser.ast.visitor.GenericVisitor;
-import com.github.javaparser.ast.visitor.VoidVisitor;
 import io.fabric8.kubernetes.api.model.apiextensions.v1.JSONSchemaProps;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,11 +16,14 @@ public class JObject implements JSONSchema2Pojo {
     private Map<String, JSONSchema2Pojo> fields = new HashMap<>();
     private boolean preserveUnknownFields = false;
 
-    private Set<String> ignoredFields =
-            Set.of("description", "schema", "example", "examples");
+    private Set<String> ignoredFields = Set.of("description", "schema", "example", "examples");
 
     public JObject(
-            String type, Map<String, JSONSchemaProps> fields, boolean preserveUnknownFields, String prefix, String suffix) {
+            String type,
+            Map<String, JSONSchemaProps> fields,
+            boolean preserveUnknownFields,
+            String prefix,
+            String suffix) {
         this.preserveUnknownFields = preserveUnknownFields;
 
         var nextPrefix = prefix;
@@ -45,7 +45,8 @@ public class JObject implements JSONSchema2Pojo {
                 if (!ignoredFields.contains(field.getKey()))
                     this.fields.put(
                             field.getKey(),
-                            JSONSchema2Pojo.fromJsonSchema(field.getKey(), field.getValue(), nextPrefix, nextSuffix));
+                            JSONSchema2Pojo.fromJsonSchema(
+                                    field.getKey(), field.getValue(), nextPrefix, nextSuffix));
             }
         }
     }
@@ -62,9 +63,11 @@ public class JObject implements JSONSchema2Pojo {
         if (clz == null) {
             clz = cu.addClass(this.type);
 
-            clz.addAnnotation(new SingleMemberAnnotationExpr(
-                    new Name("com.fasterxml.jackson.annotation.JsonInclude"),
-                    new NameExpr("com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL")));
+            clz.addAnnotation(
+                    new SingleMemberAnnotationExpr(
+                            new Name("com.fasterxml.jackson.annotation.JsonInclude"),
+                            new NameExpr(
+                                    "com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL")));
 
             var sortedFields = this.fields.keySet().stream().sorted().collect(Collectors.toList());
             var sb = new StringBuilder();
@@ -77,38 +80,40 @@ public class JObject implements JSONSchema2Pojo {
             }
             sb.append("}");
 
-            clz.addAnnotation(new SingleMemberAnnotationExpr(
-                    new Name("com.fasterxml.jackson.annotation.JsonPropertyOrder"),
-                    new NameExpr(sb.toString())));
+            clz.addAnnotation(
+                    new SingleMemberAnnotationExpr(
+                            new Name("com.fasterxml.jackson.annotation.JsonPropertyOrder"),
+                            new NameExpr(sb.toString())));
 
-            clz.addAnnotation(new SingleMemberAnnotationExpr(
-                    new Name("com.fasterxml.jackson.databind.annotation.JsonDeserialize"),
-                    new NameExpr("using = com.fasterxml.jackson.databind.JsonDeserializer.None.class")));
+            clz.addAnnotation(
+                    new SingleMemberAnnotationExpr(
+                            new Name("com.fasterxml.jackson.databind.annotation.JsonDeserialize"),
+                            new NameExpr(
+                                    "using = com.fasterxml.jackson.databind.JsonDeserializer.None.class")));
 
             clz.addAnnotation("lombok.ToString");
             clz.addAnnotation("lombok.EqualsAndHashCode");
             clz.addAnnotation("lombok.Setter");
 
-            clz.addAnnotation(new SingleMemberAnnotationExpr(
-                    new Name("lombok.experimental.Accessors"),
-                    new NameExpr("prefix = {\n" +
-                            "    \"_\",\n" +
-                            "    \"\"\n" +
-                            "}")));
+            clz.addAnnotation(
+                    new SingleMemberAnnotationExpr(
+                            new Name("lombok.experimental.Accessors"),
+                            new NameExpr("prefix = {\n" + "    \"_\",\n" + "    \"\"\n" + "}")));
 
-            clz.addAnnotation(new SingleMemberAnnotationExpr(
-                    new Name("io.sundr.builder.annotations.Buildable"),
-                    new NameExpr("editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = \"io.fabric8.kubernetes.api.builder\", refs = {\n" +
-                            "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.ObjectMeta.class),\n" +
-                            "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.ObjectReference.class),\n" +
-                            "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.LabelSelector.class),\n" +
-                            "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.Container.class),\n" +
-                            "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.EnvVar.class),\n" +
-                            "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.ContainerPort.class),\n" +
-                            "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.Volume.class),\n" +
-                            "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.VolumeMount.class)\n" +
-                            "}")
-            ));
+            clz.addAnnotation(
+                    new SingleMemberAnnotationExpr(
+                            new Name("io.sundr.builder.annotations.Buildable"),
+                            new NameExpr(
+                                    "editableEnabled = false, validationEnabled = false, generateBuilderPackage = false, builderPackage = \"io.fabric8.kubernetes.api.builder\", refs = {\n"
+                                            + "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.ObjectMeta.class),\n"
+                                            + "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.ObjectReference.class),\n"
+                                            + "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.LabelSelector.class),\n"
+                                            + "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.Container.class),\n"
+                                            + "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.EnvVar.class),\n"
+                                            + "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.ContainerPort.class),\n"
+                                            + "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.Volume.class),\n"
+                                            + "    @io.sundr.builder.annotations.BuildableReference(io.fabric8.kubernetes.api.model.VolumeMount.class)\n"
+                                            + "}")));
 
             clz.addImplementedType("io.fabric8.kubernetes.api.model.KubernetesResource");
         }
@@ -121,7 +126,8 @@ public class JObject implements JSONSchema2Pojo {
                                 .setTypeArguments(
                                         new ClassOrInterfaceType().setName("String"),
                                         new ClassOrInterfaceType().setName("Object"));
-                var objField = clz.addField(mapType, "additionalProperties", Modifier.Keyword.PRIVATE);
+                var objField =
+                        clz.addField(mapType, "additionalProperties", Modifier.Keyword.PRIVATE);
                 objField.setVariables(
                         new NodeList<>(
                                 new VariableDeclarator()
@@ -152,9 +158,10 @@ public class JObject implements JSONSchema2Pojo {
             if (!clz.getFieldByName(fieldName).isPresent()) {
                 try {
                     var objField = clz.addField(fieldType, fieldName, Modifier.Keyword.PRIVATE);
-                    objField.addAnnotation(new SingleMemberAnnotationExpr(
-                            new Name("com.fasterxml.jackson.annotation.JsonProperty"),
-                            new StringLiteralExpr(fieldName)));
+                    objField.addAnnotation(
+                            new SingleMemberAnnotationExpr(
+                                    new Name("com.fasterxml.jackson.annotation.JsonProperty"),
+                                    new StringLiteralExpr(fieldName)));
                     objField.createGetter();
                     objField.createSetter();
                 } catch (Exception cause) {

@@ -55,7 +55,7 @@ public class CompilationTest {
 
         // Assert
         assertThat(compilation.errors()).isEmpty();
-//        assertThat(compilation.sourceFiles().size()).isEqualTo(3);
+        //        assertThat(compilation.sourceFiles().size()).isEqualTo(3);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
@@ -73,7 +73,7 @@ public class CompilationTest {
 
         // Assert
         assertThat(compilation.errors()).isEmpty();
-//        assertThat(compilation.sourceFiles().size()).isEqualTo(35);
+        //        assertThat(compilation.sourceFiles().size()).isEqualTo(35);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
@@ -95,7 +95,7 @@ public class CompilationTest {
 
         // Assert
         assertThat(compilation.errors()).isEmpty();
-//        assertThat(compilation.sourceFiles().size()).isEqualTo(27);
+        //        assertThat(compilation.sourceFiles().size()).isEqualTo(27);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
@@ -117,7 +117,7 @@ public class CompilationTest {
 
         // Assert
         assertThat(compilation.errors()).isEmpty();
-//        assertThat(compilation.sourceFiles().size()).isEqualTo(109);
+        //        assertThat(compilation.sourceFiles().size()).isEqualTo(109);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
@@ -135,7 +135,7 @@ public class CompilationTest {
 
         // Assert
         assertThat(compilation.errors()).isEmpty();
-//        assertThat(compilation.sourceFiles().size()).isEqualTo(100);
+        //        assertThat(compilation.sourceFiles().size()).isEqualTo(100);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
@@ -157,7 +157,7 @@ public class CompilationTest {
 
         // Assert
         assertThat(compilation.errors()).isEmpty();
-//        assertThat(compilation.sourceFiles().size()).isEqualTo(73);
+        //        assertThat(compilation.sourceFiles().size()).isEqualTo(73);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
@@ -175,7 +175,7 @@ public class CompilationTest {
 
         // Assert
         assertThat(compilation.errors()).isEmpty();
-//        assertThat(compilation.sourceFiles().size()).isEqualTo(14);
+        //        assertThat(compilation.sourceFiles().size()).isEqualTo(14);
         assertThat(compilation.status()).isEqualTo(Compilation.Status.SUCCESS);
     }
 
